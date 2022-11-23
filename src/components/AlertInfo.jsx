@@ -1,8 +1,13 @@
 import React from "react";
 
-const AlertInfos = ({ type = "Info", message = "" }) => {
+const AlertInfos = ({ type = "Info", message = "", animateClass = "" }) => {
   return (
-    <>
+    <div
+      className={
+        "fixed right-2 w-full top-2 p-3 z-10 flex flex-col space-y-4 items-center justify-center bg-gray-100 py-6 " +
+        animateClass
+      }
+    >
       {/* INFO */}
       <div className="alert w-full flex flex-row items-center bg-blue-200 p-5 rounded border-b-2 border-blue-300">
         <div className="alert-icon flex items-center bg-blue-100 border-2 border-blue-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
@@ -25,7 +30,7 @@ const AlertInfos = ({ type = "Info", message = "" }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

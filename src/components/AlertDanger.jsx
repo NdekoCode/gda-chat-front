@@ -4,7 +4,12 @@ const AlertDanger = ({ type = "Error", message = "" }) => {
   return (
     <div className="fixed right-2 w-full top-2 p-3 z-10 flex flex-col space-y-4 items-center justify-center bg-gray-100 py-6">
       {/* Danger */}
-      <div className="alert flex flex-row items-center bg-red-200 p-5 rounded border-b-2 border-red-300">
+      <div
+        className={
+          "alert flex flex-row items-center bg-red-200 p-5 rounded border-b-2 border-red-300 " +
+          animateClass
+        }
+      >
         <div className="alert-icon flex items-center bg-red-100 border-2 border-red-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
           <span className="text-red-500">
             <svg fill="currentColor" viewBox="0 0 20 20" className="h-6 w-6">
