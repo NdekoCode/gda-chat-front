@@ -3,7 +3,7 @@ import React from "react";
 const ChatSidebar = () => {
   return (
     <aside
-      className="right-0 flex flex-col pb-2 bg-white border-l border-gray-300 xl:block"
+      className="right-0 flex flex-col hidden pb-2 bg-white border-l border-gray-300 xl:block"
       style={{ width: "24rem" }}
     >
       <div className="flex items-center justify-between w-full p-3">
