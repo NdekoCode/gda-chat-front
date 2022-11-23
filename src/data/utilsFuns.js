@@ -12,3 +12,14 @@ export function catString(str, length = 20) {
   }
   return str;
 }
+/**
+ * @description permet de convertir et d'arrondir un nombre de floatant avec les nombres après la virgule qu'on veut
+ * @author NdekoCode
+ * @export
+ * @param {string|number} nbr
+ * @param {number} [length=1]
+ * @return {number}
+ */
+export function catFloatNumber(nbr, length = 1) {
+  return parseFloat(nbr.toFixed(length));
+}
