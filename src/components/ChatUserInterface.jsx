@@ -301,10 +301,9 @@ const ChatUserInterface = () => {
         <button className="shadow-md flex items-center justify-center bg-blue-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            classname="w-6 h-6 fill-current"
             width={24}
             height={24}
-            className="ionicon"
+            className="ionicon w-6 h-6 fill-current"
             viewBox="0 0 512 512"
           >
             <title>Add</title>

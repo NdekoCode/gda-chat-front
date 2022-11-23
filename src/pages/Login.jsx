@@ -13,7 +13,7 @@ const Login = () => {
         <FormSidebar
           authQuestion="You do not have an account?"
           authBtn="Create account here"
-          path="/signup"
+          path="/register"
         />
         {/* Login */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 relative mt-12">

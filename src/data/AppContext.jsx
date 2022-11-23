@@ -24,7 +24,7 @@ const AppContext = createContext();
 /** @type {React.Provider} */
 export const ContextProvider = memo(({ children }) => {
   const [settings, setSettings] = useState({
-    main_url: "http:localhost:3500/api/v1/",
+    main_url: "http://localhost:3500/api/v1",
     token: "",
   });
   const [userData, setUserData] = useState({});

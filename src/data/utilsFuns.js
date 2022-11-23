@@ -63,7 +63,7 @@ export function connectedUser(userData) {
 export function disconnectedUser() {
   return localStorage.removeItem("userData");
 }
-export async function fetchData(url, token) {
+export async function fetchData(url, token = "") {
   let data = [],
     loading = true;
   const params = {
@@ -77,7 +77,7 @@ export async function fetchData(url, token) {
   try {
     const response = await fetch(url, params);
     const responseData = await response.json();
-    data = responseData.data;
+    data = responseData;
     loading = false;
   } catch (error) {
     console.log("Error lors de la récuperation des donnée");
@@ -85,7 +85,7 @@ export async function fetchData(url, token) {
   }
   return [data, loading];
 }
-export async function findAndSetData(url, token, setData) {
+export async function findAndSetData(url, setData, token) {
   const [data, loading] = await fetchData(url, token);
   if (data !== undefined && data !== null) {
     setData(data);
