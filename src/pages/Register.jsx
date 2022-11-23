@@ -3,7 +3,7 @@ import FormFooter from "../components/FormFooter";
 import FormInfos from "../components/FormInfos";
 import FormSidebar from "../components/FormSidebar";
 
-const Signin = () => {
+const Register = () => {
   return (
     <div className="flex min-h-screen">
       {/* Container */}
@@ -84,4 +84,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Register;
