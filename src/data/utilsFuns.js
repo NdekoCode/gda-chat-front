@@ -23,3 +23,23 @@ export function catString(str, length = 20) {
 export function catFloatNumber(nbr, length = 1) {
   return parseFloat(nbr.toFixed(length));
 }
+/**
+ * @description Permet de récuperer une information dans le localStorage
+ * @author NdekoCode
+ * @export
+ * @param {string} key la clé ou l'identifiant de la donnée à recuperer
+ * @return {*}
+ */
+export function getDataStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+/**
+ * @description Modifie une information dans le localStorage
+ * @author NdekoCode
+ * @export
+ * @param {string} key la clé ou l'identifiant de la donnée à modifier
+ * @param {any} value
+ */
+export function setDataStorage(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
