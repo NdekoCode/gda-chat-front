@@ -1,5 +1,4 @@
 import React from "react";
-
 const UserChatView = () => {
   return (
     <div className="z-20 flex flex-grow-0 flex-shrink-0 w-full pr-3 bg-white border-b">
