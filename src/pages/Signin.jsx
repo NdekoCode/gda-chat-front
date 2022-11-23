@@ -23,20 +23,28 @@ const Signin = () => {
                 <div className="w-full md:w-1/2 md:mr-2  mb-5 md:mb-0">
                   <input
                     type="text"
-                    placeholder="Firstname"
+                    placeholder="Firstname..."
                     className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal w-full"
-                    name="firstname"
+                    name="firstName"
                   />
                 </div>
 
                 <div className="w-full md:w-1/2 md:ml-2">
                   <input
                     type="text"
-                    placeholder="Lastname"
+                    placeholder="Lastname.."
                     className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal w-full"
-                    name="lastname"
+                    name="lastName"
                   />
                 </div>
+              </div>
+              <div className="w-full">
+                <input
+                  type="text"
+                  placeholder="Username..."
+                  className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal w-full"
+                  name="username"
+                />
               </div>
               <div className="w-full">
                 <input

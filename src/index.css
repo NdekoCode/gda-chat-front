@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -90,5 +90,35 @@ h1 {
   }
   a:hover {
     color: #747bff;
+  }
+}
+
+#userConnect {
+  text-transform: capitalize;
+}
+.alert.active {
+  animation: fadeIn 0.25s linear forwards;
+}
+.alert.inactive {
+  animation: fadeOut 0.25s linear forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0.55;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0.55;
+    transform: translateY(-5px);
   }
 }
