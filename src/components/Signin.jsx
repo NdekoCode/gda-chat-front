@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import FormInfos from "./FormInfos";
 
 const Signin = () => {
   return (
@@ -32,14 +33,10 @@ const Signin = () => {
         <div className="flex flex-1 flex-col items-center justify-center px-10 relative pt-16">
           {/* Login box */}
           <form className="flex flex-1 flex-col  justify-center space-y-5 max-w-md mb-5">
-            <div className="flex flex-col space-y-2 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold">
-                Create your account
-              </h2>
-              <p className="text-md md:text-xl">
-                Sign up or log in to place the order,no password require!
-              </p>
-            </div>
+            <FormInfos
+              title="Create your account"
+              description="Sign up or log in to place the order,no password require!"
+            />
             <div className="flex flex-col max-w-md space-y-5">
               <div className="md:flex">
                 <div className="w-full md:w-1/2 md:mr-2  mb-5 md:mb-0">
