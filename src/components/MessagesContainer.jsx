@@ -1,4 +1,5 @@
 import React from "react";
+import DateMessage from "./DateMessage";
 
 const MessagesContainer = () => {
   return (
@@ -8,9 +9,7 @@ const MessagesContainer = () => {
           <div className="self-center px-2 py-1 mx-0 my-1 text-sm  text-gray-700 bg-white border border-gray-200 rounded-full shadow rounded-tg">
             Channel was created
           </div>
-          <div className="self-center px-2 py-1 mx-0 my-1 text-sm  text-gray-700 bg-white border border-gray-200 rounded-full shadow rounded-tg">
-            May 6
-          </div>
+          <DateMessage date="" />
           <div className="self-start w-3/4 my-2">
             <div className="p-4 text-sm bg-white rounded-t-lg rounded-r-lg shadow">
               Don't forget to check on all responsive sizes.
