@@ -1,4 +1,5 @@
 import React from "react";
+import SearchFormInterface from "./SearchFormInterface";
 
 const ChatUserInterface = () => {
   return (
@@ -29,9 +30,9 @@ const ChatUserInterface = () => {
         </div>
       </div>
       <div className="border-b shadow-bot">
-        <ul className="flex flex-row items-center inline-block px-2 list-none select-none">
+        <ul className="flex flex-row items-center px-2 list-none select-none">
           <li className="flex-auto px-1 mx-1 -mb-px text-center rounded-t-lg cursor-pointer last:mr-0 hover:bg-gray-200">
-            <a className="flex items-center justify-center block py-2 text-xs font-semibold leading-normal tracking-wide border-b-2 border-blue-500">
+            <a className="flex items-center justify-center py-2 text-xs font-semibold leading-normal tracking-wide border-b-2 border-blue-500">
               All
             </a>
           </li>
