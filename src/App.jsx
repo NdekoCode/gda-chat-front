@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import Signin from "./pages/Signin";
-
 function App() {
   return (
     <Routes>
