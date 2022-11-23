@@ -63,3 +63,32 @@ export function connectedUser(userData) {
 export function disconnectedUser() {
   return localStorage.removeItem("userData");
 }
+export async function fetchData(url, token) {
+  let data = [],
+    loading = true;
+  const params = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  try {
+    const response = await fetch(url, params);
+    const responseData = await response.json();
+    data = responseData.data;
+    loading = false;
+  } catch (error) {
+    console.log("Error lors de la récuperation des donnée");
+    loading = true;
+  }
+  return [data, loading];
+}
+export async function findAndSetData(url, token, setData) {
+  const [data, loading] = await fetchData(url, token);
+  if (data !== undefined && data !== null) {
+    setData(data);
+  }
+  return [data, loading];
+}
