@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const FormSidebar = ({
   authQuestion = "Do you have an account?",
   authBtn = " Login here",
+  path = "/login",
 }) => {
   return (
     <div className="hidden lg:flex flex-col justify-between  bg-gradient-to-r from-white via-gray-100 to-white lg:p-8 xl:p-12 lg:max-w-sm xl:max-w-lg">
@@ -17,9 +18,9 @@ const FormSidebar = ({
         <h1 className="lg:text-3xl xl:text-5xl xl:leading-snug font-extrabold">
           Enter your account and discover new experiences
         </h1>
-        <p className="text-lg">{authQuestion} ?</p>
+        <p className="text-lg">{authQuestion} </p>
         <Link
-          to="/login"
+          to={path}
           className="inline-block flex-none px-4 py-3 border-2 rounded-lg font-medium border-black bg-black text-white"
         >
           {authBtn}

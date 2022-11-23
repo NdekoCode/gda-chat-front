@@ -1,7 +1,7 @@
 import React from "react";
-import FormFooter from "./FormFooter";
-import FormInfos from "./FormInfos";
-import FormSidebar from "./FormSidebar";
+import FormFooter from "../components/FormFooter";
+import FormInfos from "../components/FormInfos";
+import FormSidebar from "../components/FormSidebar";
 
 const Signin = () => {
   return (

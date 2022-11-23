@@ -1,7 +1,7 @@
 import React from "react";
-import ChatContainer from "./ChatContainer";
-import ChatSidebar from "./ChatSidebar";
-import ChatUserInterface from "./ChatUserInterface";
+import ChatContainer from "../components/ChatContainer";
+import ChatSidebar from "../components/ChatSidebar";
+import ChatUserInterface from "../components/ChatUserInterface";
 
 const Chat = () => {
   return (
