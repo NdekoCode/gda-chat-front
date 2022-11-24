@@ -19,6 +19,7 @@
  */
 
 import { createContext, memo, useContext, useState } from "react";
+import { API_URL } from "./utilsFuns";
 
 /** @type {React.Context} */
 const AppContext = createContext();
@@ -26,7 +27,7 @@ const AppContext = createContext();
 /** @type {React.Provider} */
 export const ContextProvider = memo(({ children }) => {
   const [settings, setSettings] = useState({
-    main_url: "http://localhost:3500/api/v1",
+    main_url: API_URL,
     token: "",
   });
 

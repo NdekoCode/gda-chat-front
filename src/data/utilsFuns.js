@@ -81,3 +81,4 @@ export async function findAndSetData(url, setData, token) {
   }
   return [data, loading];
 }
+export const API_URL = "http://localhost:3500/api/v1";
