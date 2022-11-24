@@ -38,6 +38,13 @@ export const ContextProvider = memo(({ children }) => {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
 
+  const [stateSticky, setStateVisible] = useState({
+    visible: false,
+    classVisible: "",
+  });
+  const handleVisible = () => {
+    setStateVisible((d) => ({ ...d, visible: !stateSticky.visible }));
+  };
   /** @type {AppChatContext} */
   const value = {
     settings,
@@ -54,6 +61,9 @@ export const ContextProvider = memo(({ children }) => {
     setMessages,
     users,
     setUsers,
+    stateSticky,
+    setStateVisible,
+    handleVisible,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

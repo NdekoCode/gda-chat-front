@@ -1,20 +1,25 @@
 import React, { useState } from "react";
+import ChatContext from "../data/AppContext";
 import { logOut } from "../services/AuthApi";
 
-const StickyButton = () => {
-  const [state, setState] = useState({
-    visible: false,
-    classVisible: "",
-  });
-  const handleVisible = () => {
-    setState((d) => ({ ...d, visible: !state.visible }));
+const StickyButton = ({ responsive = true }) => {
+  const { handleVisible, setUserIsAuthenticated } = ChatContext();
+  const logOutUser = () => {
+    setUserIsAuthenticated(false);
+    logOut();
+  };
+  const [visible, setVisible] = useState(false);
+  const handleStickyVisible = () => {
+    setVisible(!visible);
   };
   return (
     <div className="relative">
       <button
-        onClick={handleVisible}
+        onClick={handleStickyVisible}
         type="button"
-        className="flex self-center hidden p-2 ml-2 text-gray-500 rounded-full md:block focus:outline-none hover:text-gray-600 hover:bg-gray-300"
+        className={`flex self-center ${
+          responsive && "hidden"
+        } p-2 ml-2 text-gray-500 rounded-full md:block focus:outline-none hover:text-gray-600 hover:bg-gray-300`}
       >
         <svg
           className="w-6 h-6 text-gray-600 fill-current"
@@ -30,11 +35,11 @@ const StickyButton = () => {
         </svg>
       </button>
       {/* Dropdown menu */}
-      {state.visible && (
+      {visible && (
         <div
           id="dropdownAvatar"
           className={
-            state.visible
+            visible
               ? "fadeIn absolute bg-white bottom-100 right-0 rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
               : "fadeIn hidden " + " z-10 w-44 "
           }
@@ -48,12 +53,12 @@ const StickyButton = () => {
             aria-labelledby="dropdownUserAvatarButton"
           >
             <li>
-              <a
-                href="#"
-                className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              <button
+                onClick={handleVisible}
+                className="w-full block text-left py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               >
                 Profile
-              </a>
+              </button>
             </li>
             <li>
               <a
@@ -66,8 +71,8 @@ const StickyButton = () => {
           </ul>
           <div className="py-1">
             <button
-              onClick={logOut}
-              className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              onClick={logOutUser}
+              className="w-full block text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
             >
               LogOut
             </button>

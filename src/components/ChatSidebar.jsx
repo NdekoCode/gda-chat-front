@@ -1,13 +1,23 @@
 import React from "react";
+import ChatContext from "../data/AppContext";
+import StickyButton from "./StickyButton";
 
 const ChatSidebar = () => {
+  const { stateSticky, handleVisible } = ChatContext();
   return (
     <aside
-      className="right-0 flex flex-col hidden pb-2 bg-white border-l border-gray-300 xl:block"
+      className={
+        stateSticky.visible
+          ? "fadeEnter block  right-0 flex flex-col hidden pb-2 bg-white border-l border-gray-300 xl:block"
+          : "hidden" + ""
+      }
       style={{ width: "24rem" }}
     >
       <div className="flex items-center justify-between w-full p-3">
-        <button className="p-2 text-gray-500 rounded-full focus:outline-none hover:text-gray-600 hover:bg-gray-200">
+        <button
+          onClick={handleVisible}
+          className="p-2 text-gray-500 rounded-full focus:outline-none hover:text-gray-600 hover:bg-gray-200"
+        >
           <svg
             className="w-6 h-6 text-gray-600 fill-current"
             xmlns="http://www.w3.org/2000/svg"
@@ -39,23 +49,7 @@ const ChatSidebar = () => {
             />
           </svg>
         </button>
-        <button
-          type="button"
-          className="p-2 ml-1 text-gray-500 rounded-full focus:outline-none hover:text-gray-600 hover:bg-gray-200"
-        >
-          <svg
-            className="w-6 h-6 text-gray-600 fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            width={24}
-            height={24}
-            viewBox="0 0 24 24"
-          >
-            <path
-              fillRule="nonzero"
-              d="M12,16 C13.1045695,16 14,16.8954305 14,18 C14,19.1045695 13.1045695,20 12,20 C10.8954305,20 10,19.1045695 10,18 C10,16.8954305 10.8954305,16 12,16 Z M12,10 C13.1045695,10 14,10.8954305 14,12 C14,13.1045695 13.1045695,14 12,14 C10.8954305,14 10,13.1045695 10,12 C10,10.8954305 10.8954305,10 12,10 Z M12,4 C13.1045695,4 14,4.8954305 14,6 C14,7.1045695 13.1045695,8 12,8 C10.8954305,8 10,7.1045695 10,6 C10,4.8954305 10.8954305,4 12,4 Z"
-            />
-          </svg>
-        </button>
+        <StickyButton />
       </div>
       <div>
         <div className="flex justify-center mb-4">

@@ -105,9 +105,29 @@ h1 {
 .alert.inactive {
   animation: fadeOut 0.25s linear forwards;
 }
+.fadeEnter {
+  animation: fadeEnter 0.25s linear forwards;
+}
 .fadeOut {
   animation: fadeOut 0.25s linear forwards;
 }
+.messages-content {
+  --app-background: #eae6df;
+  background-color: #e9edef;
+  background-image: linear-gradient(180deg, var(--app-background), #e9edef);
+}
+
+@keyframes fadeEnter {
+  from {
+    opacity: 0.55;
+    transform: translateX(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0.55;

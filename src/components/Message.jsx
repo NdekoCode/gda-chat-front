@@ -2,7 +2,9 @@ import React from "react";
 
 const Message = ({ sender, msg }) => {
   return (
-    <div className={`w-3/4 my-2 ${sender ? "self-end" : "self-start"}`}>
+    <div
+      className={`w-3/4 my-2 max-w-max ${sender ? "self-end" : "self-start"}`}
+    >
       <div
         className={`p-4 text-sm  ${
           sender
