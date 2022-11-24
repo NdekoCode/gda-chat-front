@@ -9,6 +9,12 @@ const Login = () => {
     const { name, value } = currentTarget;
     setFormData((state) => ({ ...state, [name]: value }));
   };
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const loginData = { ...formData };
+    setFormData({ email: "", password: "" });
+    console.log(loginData);
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -28,6 +34,7 @@ const Login = () => {
           <form
             className="flex flex-1 flex-col  justify-center space-y-5 max-w-md"
             method="POST"
+            onSubmit={handleSubmit}
           >
             <FormInfos
               title="Sign in to your account"
