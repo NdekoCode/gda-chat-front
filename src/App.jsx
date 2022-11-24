@@ -11,9 +11,13 @@ import { findAndSetData } from "./data/utilsFuns";
 import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { verifyUserHasAuthenticated } from "./services/AuthApi";
 function App() {
-  const { settings, setMessages, setLoading } = ChatContext();
+  const { settings, setMessages, setLoading, setUserIsAuthenticated } =
+    ChatContext();
   useEffect(() => {
+    // On verifie si l'utilisateur est connecter
+    setUserIsAuthenticated(verifyUserHasAuthenticated());
     (async () => {
       const [data, loading] = await findAndSetData(
         settings.main_url + "/chat",
