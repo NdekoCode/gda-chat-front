@@ -43,26 +43,6 @@ export function getDataStorage(key) {
 export function setDataStorage(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
-/**
- * @description Verifie si l'utilisateur est connecter, pour sela il verifie si ses donner sont présente dans le localStorage
- * @author NdekoCode
- * @export
- * @return {boolean}
- */
-export function verifyUserConnect() {
-  const data = getDataStorage("userData");
-  if (data !== null && data !== undefined) {
-    // On verifie si le tableau retourner est supérieur à 1
-    return Object.keys(data).length > 0;
-  }
-  return false;
-}
-export function connectedUser(userData) {
-  setDataStorage("userData", userData);
-}
-export function disconnectedUser() {
-  return localStorage.removeItem("userData");
-}
 export async function fetchData(url, token = "") {
   let data = [],
     loading = true;
