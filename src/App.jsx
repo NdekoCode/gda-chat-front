@@ -1,3 +1,9 @@
+// TODO: #11 - Fetch Users
+// TODO: #10 - Register Users
+// TODO: #9 - Login user
+// TODO: #8 - Load message
+// TODO: #7 - Load user message
+// TODO: #6 - Uplaod user image
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import ChatContext from "./data/AppContext";
