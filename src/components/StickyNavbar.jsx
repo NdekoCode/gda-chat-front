@@ -28,11 +28,17 @@ const StickyNavbar = () => {
         type="button"
       >
         <span className="sr-only">{userData.username}</span>
-        <img
-          className="w-8 h-8 rounded-full object-cover"
-          src={userData.image}
-          alt="user photo"
-        />
+        {userData.image ? (
+          <img
+            className="w-8 h-8 rounded-full object-cover"
+            src={userData.image}
+            alt="user photo"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full text-white font-bold text-xl pt-0.5">
+            {userData.username[0].toUpperCase()}
+          </div>
+        )}
       </button>
       {/* Dropdown menu */}
       {state.visible && (

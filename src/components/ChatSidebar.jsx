@@ -57,11 +57,17 @@ const ChatSidebar = () => {
             type="button"
             className="content-center block w-32 h-32 p-1 overflow-hidden text-center rounded-full focus:outline-none"
           >
-            <img
-              className="content-center object-cover w-full h-full border-2 border-gray-200 rounded-full"
-              src={userData.image}
-              alt={userData.username}
-            />
+            {userData.image ? (
+              <img
+                className="content-center object-cover w-full h-full border-2 border-gray-200 rounded-full"
+                src={userData.image}
+                alt={userData.username}
+              />
+            ) : (
+              <div className="content-center object-cover flex items-center justify-center text-4xl w-full bg-gray-900  h-full border-2  rounded-full text-white font-bold">
+                {userData.username[0].toUpperCase()}
+              </div>
+            )}
           </button>
         </div>
         <p className="text-lg font-semibold text-center text-gray-800">
