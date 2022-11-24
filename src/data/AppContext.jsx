@@ -28,7 +28,7 @@ const AppContext = createContext();
 export const ContextProvider = memo(({ children }) => {
   const [settings, setSettings] = useState({
     main_url: API_URL,
-    token: "",
+    token: getDataStorage("userData")?.token,
   });
 
   const [userData, setUserData] = useState(getDataStorage("userData"));
@@ -37,6 +37,7 @@ export const ContextProvider = memo(({ children }) => {
   const [searchUser, setSearchUser] = useState("");
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [alert, setAlert] = useState([]);
 
   const [stateSticky, setStateVisible] = useState({
     visible: false,
@@ -64,6 +65,8 @@ export const ContextProvider = memo(({ children }) => {
     stateSticky,
     setStateVisible,
     handleVisible,
+    alert,
+    setAlert,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

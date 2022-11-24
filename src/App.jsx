@@ -8,6 +8,8 @@
 // TODO: #17  - User login
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
 import RedirectAuthenticated from "./components/RedirectAuthenticated";
 import ChatContext from "./data/AppContext";
@@ -34,26 +36,31 @@ function App() {
     })();
   }, [userIsAuthenticated]);
   return (
-    <Routes>
-      {routes.map(({ path, protect, component }, index) => {
-        if (protect) {
+    <>
+      <Routes>
+        {routes.map(({ path, protect, component }, index) => {
+          if (protect) {
+            return (
+              <Route
+                key={index}
+                path={path}
+                element={<AuthenticatedRoutes>{component}</AuthenticatedRoutes>}
+              ></Route>
+            );
+          }
           return (
             <Route
-              key={index}
               path={path}
-              element={<AuthenticatedRoutes>{component}</AuthenticatedRoutes>}
+              key={index}
+              element={
+                <RedirectAuthenticated>{component}</RedirectAuthenticated>
+              }
             ></Route>
           );
-        }
-        return (
-          <Route
-            path={path}
-            key={index}
-            element={<RedirectAuthenticated>{component}</RedirectAuthenticated>}
-          ></Route>
-        );
-      })}
-    </Routes>
+        })}
+      </Routes>
+      <ToastContainer />
+    </>
   );
 }
 

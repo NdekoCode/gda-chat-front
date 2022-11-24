@@ -76,12 +76,19 @@ export async function login(dataForm) {
     if (loginData.userData) {
       setDataStorage("userData", loginData.userData);
       setDataStorage("user_token", loginData.userData.token);
-      return true;
+      return [loginData.alert, true];
     }
+    return [loginData.alert, false];
   } catch (error) {
-    console.log("Erreur survenus lors l'authentification " + error.message);
+    return [
+      {
+        message: "Erreur survenus lors l'authentification " + error.message,
+        statusCode: 401,
+        type: "Danger",
+      },
+      false,
+    ];
   }
-  return false;
 }
 export async function register(dataForm) {
   const registerUrl = API_URL + "/auth/register";
@@ -99,4 +106,5 @@ export async function register(dataForm) {
     };
     return await login(userData);
   }
+  return [alert, false];
 }
