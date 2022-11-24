@@ -96,10 +96,16 @@ h1 {
 #userConnect {
   text-transform: capitalize;
 }
+.fadeIn {
+  animation: fadeIn 0.25s linear forwards;
+}
 .alert.active {
   animation: fadeIn 0.25s linear forwards;
 }
 .alert.inactive {
+  animation: fadeOut 0.25s linear forwards;
+}
+.fadeOut {
   animation: fadeOut 0.25s linear forwards;
 }
 @keyframes fadeIn {

@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import FormFooter from "../components/FormFooter";
 import FormInfos from "../components/FormInfos";
 import FormSidebar from "../components/FormSidebar";
+import ChatContext from "../data/AppContext";
+import { login } from "../services/AuthApi";
 
 const Login = () => {
+  const { setUserIsAuthenticated } = ChatContext();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
@@ -12,8 +15,8 @@ const Login = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     const loginData = { ...formData };
-    setFormData({ email: "", password: "" });
-    console.log(loginData);
+    // setFormData({ email: "", password: "" });
+    login(loginData).then((res) => setUserIsAuthenticated(res));
   };
 
   return (
