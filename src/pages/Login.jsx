@@ -31,7 +31,10 @@ const Login = () => {
         if (result) {
           const dataStore = getDataStorage("userData");
           setUserData(dataStore);
-          setSettings((setting) => ({ ...setting, token: dataStore.token }));
+          setSettings((setting) => ({
+            ...setting,
+            token: "Bearer " + dataStore.token,
+          }));
           toast.success(alert.message);
           return setUserIsAuthenticated(result);
         }

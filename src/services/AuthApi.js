@@ -75,7 +75,7 @@ export async function login(dataForm) {
     const [loginData] = await fetchUserConnect(loginUrl, dataForm);
     if (loginData.userData) {
       setDataStorage("userData", loginData.userData);
-      setDataStorage("user_token", loginData.userData.token);
+      setDataStorage("user_token", "Bearer " + loginData.userData.token);
       return [loginData.alert, true];
     }
     return [loginData.alert, false];

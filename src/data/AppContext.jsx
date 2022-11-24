@@ -28,7 +28,7 @@ const AppContext = createContext();
 export const ContextProvider = memo(({ children }) => {
   const [settings, setSettings] = useState({
     main_url: API_URL,
-    token: getDataStorage("userData")?.token,
+    token: getDataStorage("user_token"),
   });
 
   const [userData, setUserData] = useState(getDataStorage("userData"));
