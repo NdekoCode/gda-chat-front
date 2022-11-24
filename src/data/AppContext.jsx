@@ -31,7 +31,7 @@ export const ContextProvider = memo(({ children }) => {
   });
 
   const [userData, setUserData] = useState({});
-  const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
+  const [userIsAuthenticated, setUserIsAuthenticated] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [searchUser, setSearchUser] = useState("");
   const [messages, setMessages] = useState([]);

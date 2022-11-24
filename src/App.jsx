@@ -7,6 +7,7 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
+import RedirectAuthenticated from "./components/RedirectAuthenticated";
 import ChatContext from "./data/AppContext";
 import { findAndSetData } from "./data/utilsFuns";
 import routes from "./routes/routes";
@@ -42,7 +43,13 @@ function App() {
             ></Route>
           );
         }
-        return <Route path={path} key={index} element={component}></Route>;
+        return (
+          <Route
+            path={path}
+            key={index}
+            element={<RedirectAuthenticated>{component}</RedirectAuthenticated>}
+          ></Route>
+        );
       })}
     </Routes>
   );

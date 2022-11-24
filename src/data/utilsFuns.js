@@ -34,6 +34,15 @@ export function getDataStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
 /**
+ * @description Supprime un element dans le localStorage
+ * @author NdekoCode
+ * @export
+ * @param {*} key
+ */
+export function removeItem(key) {
+  localStorage.removeItem(key);
+}
+/**
  * @description Modifie une information dans le localStorage
  * @author NdekoCode
  * @export

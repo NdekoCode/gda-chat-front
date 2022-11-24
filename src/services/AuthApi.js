@@ -1,4 +1,5 @@
-import { getDataStorage, setDataStorage } from "../data/utilsFuns";
+import jwtDecode from "jwt-decode";
+import { getDataStorage, removeItem, setDataStorage } from "../data/utilsFuns";
 /**
  * @description Verifie si l'utilisateur est connecter, pour sela il verifie si ses donner sont présente dans le localStorage
  * @author NdekoCode
@@ -6,6 +7,7 @@ import { getDataStorage, setDataStorage } from "../data/utilsFuns";
  * @return {boolean}
  */
 export function verifyUserHasAuthenticated() {
+  return true;
   const data = getDataStorage("userData");
   if (data !== null && data !== undefined) {
     // On verifie si le tableau retourner est supérieur à 1
@@ -17,5 +19,8 @@ export function connectedUser(userData) {
   setDataStorage("userData", userData);
 }
 export function disconnectedUser() {
-  return localStorage.removeItem("userData");
+  return removeItem("userData");
+}
+export async function fetchUserConnect() {
+  console.log(jwtDecode);
 }
