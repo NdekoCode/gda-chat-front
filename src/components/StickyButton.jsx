@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ChatContext from "../data/AppContext";
 import { logOut } from "../services/AuthApi";
 
-const StickyButton = () => {
+const StickyButton = ({ responsive = true }) => {
   const { handleVisible, setUserIsAuthenticated } = ChatContext();
   const logOutUser = () => {
     setUserIsAuthenticated(false);
@@ -17,7 +17,9 @@ const StickyButton = () => {
       <button
         onClick={handleStickyVisible}
         type="button"
-        className="flex self-center hidden p-2 ml-2 text-gray-500 rounded-full md:block focus:outline-none hover:text-gray-600 hover:bg-gray-300"
+        className={`flex self-center ${
+          responsive && "hidden"
+        } p-2 ml-2 text-gray-500 rounded-full md:block focus:outline-none hover:text-gray-600 hover:bg-gray-300`}
       >
         <svg
           className="w-6 h-6 text-gray-600 fill-current"
