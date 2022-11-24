@@ -3,7 +3,7 @@ import ChatContext from "../data/AppContext";
 import { logOut } from "../services/AuthApi";
 
 const StickyButton = ({ responsive = true }) => {
-  const { handleVisible, setUserIsAuthenticated } = ChatContext();
+  const { handleVisible, userData, setUserIsAuthenticated } = ChatContext();
   const logOutUser = () => {
     setUserIsAuthenticated(false);
     logOut();
@@ -45,8 +45,8 @@ const StickyButton = ({ responsive = true }) => {
           }
         >
           <div className="py-3 px-4 text-sm text-gray-900 dark:text-white">
-            <div>Karen</div>
-            <div className="font-medium truncate">Karen@gmail.com</div>
+            <div>{userData.username}</div>
+            <div className="font-medium truncate">{userData.email}</div>
           </div>
           <ul
             className="py-1 text-sm text-gray-700 dark:text-gray-200"

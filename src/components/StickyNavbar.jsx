@@ -3,7 +3,7 @@ import ChatContext from "../data/AppContext";
 import { logOut } from "../services/AuthApi";
 
 const StickyNavbar = () => {
-  const { handleVisible, setUserIsAuthenticated } = ChatContext();
+  const { handleVisible, setUserIsAuthenticated, userData } = ChatContext();
   const [state, setState] = useState({
     visible: false,
     classVisible: "",
@@ -25,10 +25,10 @@ const StickyNavbar = () => {
         className="flex items-center justify-center mx-3 w-10 h-10 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
         type="button"
       >
-        <span className="sr-only">Okay</span>
+        <span className="sr-only">{userData.username}</span>
         <img
           className="w-8 h-8 rounded-full object-cover"
-          src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=50"
+          src={userData.image}
           alt="user photo"
         />
       </button>
@@ -44,8 +44,8 @@ const StickyNavbar = () => {
           }
         >
           <div className="py-3 px-4 text-sm text-gray-900 dark:text-white">
-            <div>Karen</div>
-            <div className="font-medium truncate">Karen@gmail.com</div>
+            <div>{userData.username}</div>
+            <div className="font-medium truncate">{userData.email}</div>
           </div>
           <ul
             className="py-1 text-sm text-gray-700 dark:text-gray-200"

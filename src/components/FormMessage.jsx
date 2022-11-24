@@ -3,8 +3,8 @@ import React from "react";
 const FormMessage = () => {
   return (
     <form className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">
-      <div className="w-full">
-        {/* <span className="absolute inset-y-0 left-0 flex items-center pl-6">
+      <div className="w-full flex items">
+        <span className="absolute inset-y-0 left-0 flex items-center pl-6">
           <label
             htmlFor="file"
             className="p-1 focus:outline-none focus:shadow-none cursor-pointer"
@@ -26,7 +26,7 @@ const FormMessage = () => {
           </label>
 
           <input id="file" type="file" className="hidden" />
-        </span> */}
+        </span>
         <span className="absolute inset-y-0 right-0 flex items-center pr-6">
           <button
             type="submit"
@@ -46,14 +46,15 @@ const FormMessage = () => {
             </svg>
           </button>
         </span>
-        <input
-          type="search"
-          className="w-full py-2 pl-10 text-sm bg-white border border-transparent appearance-none rounded-tg placeholder-gray-800 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue"
+        <textarea
+          rows={1.2}
+          type="text"
+          className="w-full flex items-center  scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 py-2 pl-10 text-sm bg-white border border-transparent appearance-none  placeholder-gray-800 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue resize-none"
           style={{ borderRadius: 25 }}
           name="message"
           placeholder="Message..."
           autoComplete="off"
-        />
+        ></textarea>
       </div>
     </form>
   );

@@ -3,7 +3,7 @@ import ChatContext from "../data/AppContext";
 import StickyButton from "./StickyButton";
 
 const ChatSidebar = () => {
-  const { stateSticky, handleVisible } = ChatContext();
+  const { stateSticky, userData, handleVisible } = ChatContext();
   return (
     <aside
       className={
@@ -59,13 +59,13 @@ const ChatSidebar = () => {
           >
             <img
               className="content-center object-cover w-full h-full border-2 border-gray-200 rounded-full"
-              src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=50"
-              alt=""
+              src={userData.image}
+              alt={userData.username}
             />
           </button>
         </div>
         <p className="text-lg font-semibold text-center text-gray-800">
-          Karen J.
+          {userData.username}
         </p>
         <p className="text-sm font-medium text-center text-blue-500">online</p>
       </div>
@@ -86,7 +86,7 @@ const ChatSidebar = () => {
         </div>
         <div className="ml-4">
           <div className="mr-auto text-sm font-semibold text-gray-800">
-            Anne marie riziki
+            {`${userData.firstName} ${userData.lastName}`}
           </div>
           <div className="mt-1 mr-auto text-sm font-semibold leading-none text-gray-600">
             Fullname
@@ -111,7 +111,7 @@ const ChatSidebar = () => {
           </div>
           <div>
             <div className="ml-4 mr-auto text-sm font-semibold text-gray-800">
-              @karen
+              @{userData.username}
             </div>
             <div className="mt-1 ml-4 mr-auto text-sm font-semibold leading-none text-gray-600">
               Username
@@ -158,7 +158,7 @@ const ChatSidebar = () => {
               Email
             </div>
             <div className="mt-1 mr-auto text-sm font-semibold leading-none text-gray-600">
-              anna@ndekocode.com
+              {userData.email}
             </div>
           </div>
         </div>
