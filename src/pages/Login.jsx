@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import FormFooter from "../components/FormFooter";
 import FormInfos from "../components/FormInfos";
 import FormSidebar from "../components/FormSidebar";
 
 const Login = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const handleChange = ({ currentTarget }) => {
+    const { name, value } = currentTarget;
+    setFormData((state) => ({ ...state, [name]: value }));
+  };
+
   return (
     <div className="flex min-h-screen">
       {/* Container */}
@@ -17,8 +23,12 @@ const Login = () => {
         />
         {/* Login */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 relative mt-12">
+          {JSON.stringify(formData)}
           {/* Login box */}
-          <form className="flex flex-1 flex-col  justify-center space-y-5 max-w-md">
+          <form
+            className="flex flex-1 flex-col  justify-center space-y-5 max-w-md"
+            method="POST"
+          >
             <FormInfos
               title="Sign in to your account"
               description="Sign up or log in to place the order,no password require!"
@@ -30,6 +40,8 @@ const Login = () => {
                   placeholder="Email"
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal w-full"
                   name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
               <div className="w-full">
@@ -38,6 +50,8 @@ const Login = () => {
                   name="password"
                   placeholder="Password"
                   className="flex px-3 py-2 md:px-4 md:py-3 border-2 border-black rounded-lg font-medium placeholder:font-normal w-full"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
               </div>
               <button className="flex items-center justify-center flex-none px-3 py-2 md:px-4 md:py-3 border-2 rounded-lg font-medium border-black bg-black text-white">
