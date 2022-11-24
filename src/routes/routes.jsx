@@ -7,12 +7,12 @@ const Chat = lazy(() => import("../pages/Chat"));
 const routes = [
   {
     path: "/",
-    protected: false,
+    protect: false,
     component: <Navigate to="/login" replace />,
   },
   {
     path: "/login",
-    protected: false,
+    protect: false,
     component: (
       <Suspense fallback={<Loading />}>
         <Login />
@@ -21,7 +21,7 @@ const routes = [
   },
   {
     path: "/register",
-    protected: false,
+    protect: false,
     component: (
       <Suspense fallback={<Loading />}>
         <Register />
@@ -30,7 +30,7 @@ const routes = [
   },
   {
     path: "/chat",
-    protected: true,
+    protect: true,
     component: (
       <Suspense fallback={<Loading />}>
         <Chat />
@@ -39,7 +39,7 @@ const routes = [
   },
   {
     path: "/chat/:user",
-    protected: true,
+    protect: true,
     component: (
       <Suspense fallback={<Loading />}>
         <Chat />
