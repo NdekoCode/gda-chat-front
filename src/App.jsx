@@ -4,8 +4,8 @@
 // TODO: #8 - Load message
 // TODO: #7 - Load user message
 // TODO: #6 - Uplaod user image
-// TODO:  - User register
-// TODO:  - User login
+// TODO: #16  - User register
+// TODO: #17  - User login
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
