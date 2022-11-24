@@ -15,8 +15,11 @@ export function verifyUserHasAuthenticated() {
   const token = getDataStorage("user_token");
   const isValid = token ? tokenIsValid(token) : false;
   if (!isValid) {
-    removeItem("user_token");
+    console.log("TOken invalide");
+    return removeItem("user_token");
   }
+
+  console.log("Token valide");
   return isValid;
 }
 export function verifyUserData() {
@@ -69,10 +72,10 @@ export function tokenIsValid(token) {
 export async function login(dataForm) {
   const loginUrl = API_URL + "/auth/login";
   try {
-    const [loginData, isLoading] = await fetchUserConnect(loginUrl, dataForm);
-    if (loginData.token) {
-      setDataStorage("userData", loginData);
-      setDataStorage("user_token", loginData.token);
+    const [loginData] = await fetchUserConnect(loginUrl, dataForm);
+    if (loginData.userData) {
+      setDataStorage("userData", loginData.userData);
+      setDataStorage("user_token", loginData.userData.token);
       return true;
     }
   } catch (error) {
@@ -82,5 +85,12 @@ export async function login(dataForm) {
 }
 export function register(dataForm) {
   const registerUrl = API_URL + "/auth/register";
-  const data = fetchUserConnect(registerUrl, dataForm);
+  const { alert } = fetchUserConnect(registerUrl, dataForm);
+  if (alert.statusCode < 400) {
+    const userData = {
+      email: dataForm.email,
+      password: dataForm.password,
+    };
+    return login(userData);
+  }
 }
