@@ -83,14 +83,20 @@ export async function login(dataForm) {
   }
   return false;
 }
-export function register(dataForm) {
+export async function register(dataForm) {
   const registerUrl = API_URL + "/auth/register";
-  const { alert } = fetchUserConnect(registerUrl, dataForm);
+  delete dataForm.confpassword;
+  const [responseUserData] = await fetchUserConnect(registerUrl, dataForm);
+  // console.group();
+  // console.log(response);
+  // console.groupEnd();
+  const { alert } = responseUserData;
+
   if (alert.statusCode < 400) {
     const userData = {
       email: dataForm.email,
       password: dataForm.password,
     };
-    return login(userData);
+    return await login(userData);
   }
 }
