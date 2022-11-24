@@ -19,7 +19,7 @@
  */
 
 import { createContext, memo, useContext, useState } from "react";
-import { API_URL } from "./utilsFuns";
+import { API_URL, getDataStorage } from "./utilsFuns";
 
 /** @type {React.Context} */
 const AppContext = createContext();
@@ -31,7 +31,7 @@ export const ContextProvider = memo(({ children }) => {
     token: "",
   });
 
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(getDataStorage("userData"));
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [searchUser, setSearchUser] = useState("");

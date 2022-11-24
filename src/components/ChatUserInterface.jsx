@@ -283,7 +283,7 @@ const ChatUserInterface = () => {
         </ul>
       </div>
       <div className="fixed bottom-0 right-0 z-40 mb-6 mr-4">
-        <button className="shadow-md flex items-center justify-center bg-blue-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-full">
+        <button className="animate-bounce shadow-md flex items-center justify-center bg-blue-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={24}
