@@ -6,7 +6,7 @@ import FormMessage from "./FormMessage";
 import Message from "./Message";
 
 const MessagesContainer = () => {
-  const { settings, setMessages, setLoading, messages } = ChatContext();
+  const { userData, chatUser } = ChatContext();
   return (
     <div
       className="top-0 bottom-0 left-0 right-0 flex flex-col flex-1 overflow-hidden bg-transparent bg-bottom bg-contain bg-chat center center "
@@ -18,7 +18,14 @@ const MessagesContainer = () => {
             Channel was created
           </div>
           <DateMessage date=" May 6" />
-          <Message sender={false} msg="Nice to meet you arick" />
+          {chatUser.map(({ sent_by, message, _id }) => (
+            <Message
+              key={_id}
+              sender={sent_by === userData._id}
+              msg={message}
+            />
+          ))}
+          {/* <Message sender={false} msg="Nice to meet you arick" /> */}
           <Message sender={true} msg="HI my name is arick" />
         </div>
       </div>

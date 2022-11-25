@@ -86,4 +86,8 @@ export async function findAndSetData(url, setData) {
 export function objectIsEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
+
+export function arrayIsEmpty(arr) {
+  return typeof arr !== "undefined" && arr.length < 1;
+}
 export const API_URL = "http://localhost:3500/api/v1";

@@ -1,31 +1,27 @@
-import React from "react";
+import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../data/AppContext";
-import { findAndSetData } from "../data/utilsFuns";
+import { arrayIsEmpty, findAndSetData } from "../data/utilsFuns";
 
-const UserDataInterface = ({ userData }) => {
-  const { settings, setChatUser, setSelectedUser } = ChatContext();
+const UserDataInterface = memo(({ userData }) => {
+  const { settings, setSelectedUser, setChatUser } = ChatContext();
+  const [userMessages, setUserMessages] = useState([]);
+  useEffect(() => {
+    (async () => {
+      console.log(settings.token);
+      const [data, loading] = await findAndSetData(
+        settings.main_url + "/chat/user/" + userData._id,
+        setUserMessages,
+        settings.token
+      );
+    })();
+  }, [settings.token]);
 
-  const bgRandom = [
-    "bg-red-600",
-    "gb-green-700",
-    "bg-yellow-800",
-    "bg-blue-800",
-    "bg-gray-900",
-  ];
   const { firstName, lastName, image, username, _id } = userData;
   const fullName = `${firstName} ${lastName}`;
   const handleClick = () => {
     console.log(settings.main_url + "/chat/user/" + _id);
+    setChatUser(userMessages);
     setSelectedUser(userData);
-    console.log(_id);
-    (async () => {
-      console.log(settings.token);
-      const [data, loading] = await findAndSetData(
-        settings.main_url + "/chat/user/" + _id,
-        setChatUser
-      );
-      console.log(data);
-    })();
   };
   return (
     <button
@@ -43,11 +39,7 @@ const UserDataInterface = ({ userData }) => {
                 alt={username}
               />
             ) : (
-              <div
-                className={`w-12 h-12 flex items-center justify-center text-xl font-bold rounded-full text-white ${
-                  bgRandom[parseInt(Math.random() * bgRandom.length)]
-                }`}
-              >
+              <div className="w-12 h-12 flex items-center justify-center text-xl font-bold rounded-full text-whitebg-blue-800">
                 {username[0].toUpperCase()}
               </div>
             )}
@@ -96,7 +88,11 @@ const UserDataInterface = ({ userData }) => {
               </div>
             </div>
             <div className="flex justify-between text-sm leading-none truncate">
-              <span>Writing...</span>
+              <span className="text-gray-500">
+                {!arrayIsEmpty(userMessages)
+                  ? userMessages[userMessages.length - 1].message
+                  : ""}{" "}
+              </span>
               <span
                 v-else=""
                 className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"
@@ -109,6 +105,6 @@ const UserDataInterface = ({ userData }) => {
       </div>
     </button>
   );
-};
+});
 
 export default UserDataInterface;
