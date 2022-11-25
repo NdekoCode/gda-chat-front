@@ -11,12 +11,12 @@ const ChatUserInterface = () => {
 
   useEffect(() => {
     (async () => {
-      console.log(settings.token);
       const [data, loading] = await findAndSetData(
-        settings.main_url + "/auth/users",
+        settings.main_url + "/auth/contacts",
         setUsers,
         settings.token
       );
+      console.log(data, users);
     })();
   }, [settings.token]);
   return (
