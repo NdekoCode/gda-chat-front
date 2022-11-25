@@ -18,10 +18,10 @@ const MessagesContainer = () => {
             Channel was created
           </div>
           <DateMessage date=" May 6" />
-          {chatUser.map(({ sent_by, message, _id }) => (
+          {chatUser.map(({ send_by, message, _id }) => (
             <Message
               key={_id}
-              sender={sent_by === userData._id}
+              sender={send_by === userData.userId}
               msg={message}
             />
           ))}

@@ -3,26 +3,30 @@ import ChatContext from "../data/AppContext";
 import { arrayIsEmpty } from "../data/utilsFuns";
 
 const UserDataInterface = memo(({ user }) => {
-  const { settings, messages, setSelectedUser, userData, setChatUser } =
-    ChatContext();
+  const { messages, setSelectedUser, userData, setChatUser } = ChatContext();
 
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
   const [userMessages, setUserMessages] = useState([]);
 
   const handleClick = () => {
-    console.log(settings.main_url + "/chat/user/" + _id);
     setChatUser(userMessages);
     setSelectedUser(user);
   };
 
   useEffect(() => {
     setUserMessages(
-      messages.filter(
-        (msg) =>
-          (msg.userIdA === _id && msg.userIdB === userData._id) ||
-          (msg.userIdB === _id && msg.userIdA === userData._id)
-      )
+      messages.filter((msg) => {
+        console.log(
+          msg.userIdB === userData.userId,
+          msg.userIdB,
+          userData.userId
+        );
+        return (
+          (msg.userIdA === _id && msg.userIdB === userData.userId) ||
+          (msg.userIdB === _id && msg.userIdA === userData.userId)
+        );
+      })
     );
   }, [setUserMessages]);
   console.log(userMessages);
