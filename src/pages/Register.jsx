@@ -14,6 +14,7 @@ const Register = () => {
     isLoading,
     setLoading,
     setUserData,
+    setAlert,
   } = ChatContext();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -32,10 +33,10 @@ const Register = () => {
     evt.preventDefault();
     const loginData = { ...formData };
     (async () => {
-      const [data, result] = await register(loginData);
+      const [data, result] = await register(loginData, setAlert);
       try {
         if (result) {
-          const [alert, resultLogin] = await login(data);
+          const [alert, resultLogin] = await login(data, setAlert);
           if (resultLogin) {
             setLoading(false);
             const dataStore = getDataStorage("userData");

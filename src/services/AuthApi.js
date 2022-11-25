@@ -69,7 +69,7 @@ export function tokenIsValid(token) {
   const { exp } = jwtDecode(token);
   return exp * 1000 > new Date().getTime();
 }
-export async function login(dataForm) {
+export async function login(dataForm, setAlert = (v) => {}) {
   const loginUrl = API_URL + "/auth/login";
   try {
     const [loginData] = await fetchUserConnect(loginUrl, dataForm);
@@ -78,30 +78,33 @@ export async function login(dataForm) {
       setDataStorage("user_token", "Bearer " + loginData.userData.token);
       return [loginData.alert, true];
     }
+
+    setAlert(alert);
     return [loginData.alert, false];
   } catch (error) {
-    return [
-      {
-        message: "Erreur survenus lors l'authentification " + error.message,
-        statusCode: 401,
-        type: "Danger",
-      },
-      false,
-    ];
+    const alert = {
+      message: "Erreur survenus lors l'authentification " + error.message,
+      statusCode: 401,
+      type: "Danger",
+    };
+    setAlert(alert);
+
+    return [alert, false];
   }
 }
-export async function register(dataForm) {
+export async function register(dataForm, setAlert = (v) => {}) {
   const registerUrl = API_URL + "/auth/register";
   delete dataForm.confpassword;
   const [responseUserData] = await fetchUserConnect(registerUrl, dataForm);
   const { alert } = responseUserData;
-
   if (alert.statusCode < 400) {
     const userData = {
       email: dataForm.email,
       password: dataForm.password,
     };
+    setAlert(alert);
     return [userData, true];
   }
+  setAlert(alert);
   return [alert, false];
 }
