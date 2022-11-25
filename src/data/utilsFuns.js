@@ -82,4 +82,8 @@ export async function findAndSetData(url, setData) {
   }
   return [data, loading];
 }
+
+export function objectIsEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
 export const API_URL = "http://localhost:3500/api/v1";

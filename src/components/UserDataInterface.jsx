@@ -3,7 +3,7 @@ import ChatContext from "../data/AppContext";
 import { findAndSetData } from "../data/utilsFuns";
 
 const UserDataInterface = ({ userData }) => {
-  const { chatUser, settings, setChatUser } = ChatContext();
+  const { settings, setChatUser, setSelectedUser } = ChatContext();
 
   const bgRandom = [
     "bg-red-600",
@@ -16,6 +16,7 @@ const UserDataInterface = ({ userData }) => {
   const fullName = `${firstName} ${lastName}`;
   const handleClick = () => {
     console.log(settings.main_url + "/chat/user/" + _id);
+    setSelectedUser(userData);
     console.log(_id);
     (async () => {
       console.log(settings.token);
