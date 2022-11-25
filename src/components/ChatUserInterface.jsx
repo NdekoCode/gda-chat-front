@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import ChatContext from "../data/AppContext";
-import { findAndSetData } from "../data/utilsFuns";
+import { arrayIsEmpty, findAndSetData } from "../data/utilsFuns";
 import SearchFormInterface from "./SearchFormInterface";
 import StickyNavbar from "./StickyNavbar";
 import UserDataInterface from "./UserDataInterface";
+import UserSkeleton from "./UserSkeleton";
 
 const ChatUserInterface = () => {
   const { users, settings, setUsers } = ChatContext();
@@ -45,9 +46,13 @@ const ChatUserInterface = () => {
       </div>
       <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter scrollbar-thumb-rounded scrollbar-thumb-gray">
         <ul className="flex flex-col inline-block w-full h-screen px-2 select-none">
-          {users.map((user) => (
-            <UserDataInterface key={user._id} userData={user} />
-          ))}
+          {!arrayIsEmpty(users) ? (
+            users.map((user) => (
+              <UserDataInterface key={user._id} userData={user} />
+            ))
+          ) : (
+            <UserSkeleton />
+          )}
 
           <li
             className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
@@ -146,83 +151,6 @@ const ChatUserInterface = () => {
                   </div>
                   <div className="flex justify-between text-sm leading-none truncate">
                     <span>Writing...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li
-            className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
-            style={{ paddingTop: "0.65rem", paddingBottom: "0.65rem" }}
-          >
-            <div className="flex justify-between w-full focus:outline-none">
-              <div className="flex justify-between w-full">
-                <div className="relative flex items-center justify-center w-12 h-12 ml-2 mr-3 text-xl font-semibold text-white bg-blue-500 rounded-full flex-no-shrink">
-                  <img
-                    className="object-cover w-12 h-12 rounded-full"
-                    src="https://images.unsplash.com/photo-1589351189946-b8eb5e170ba6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=100"
-                    alt=""
-                  />
-                </div>
-                <div className="items-center flex-1 min-w-0">
-                  <div className="flex justify-between mb-1">
-                    <h2 className="text-sm font-semibold text-black">
-                      Meg Rigden
-                    </h2>
-                    <div className="flex">
-                      <span className="ml-1 text-xs font-medium text-gray-600">
-                        12.52
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between text-sm leading-none truncate">
-                    <span>Washington D.C.</span>
-                    <span
-                      v-else=""
-                      className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"
-                    >
-                      2
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li
-            className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
-            style={{ paddingTop: "0.65rem", paddingBottom: "0.65rem" }}
-          >
-            <div className="flex justify-between w-full focus:outline-none">
-              <div className="flex justify-between w-full">
-                <div className="relative flex items-center justify-center w-12 h-12 ml-2 mr-3 text-xl font-semibold text-white bg-blue-500 rounded-full flex-no-shrink">
-                  <img
-                    className="object-cover w-12 h-12 rounded-full"
-                    src="https://images.unsplash.com/photo-1589127097756-b2750896a728?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=100"
-                    alt=""
-                  />
-                  <div
-                    className="absolute bottom-0 right-0 flex items-center justify-center bg-white rounded-full"
-                    style={{ width: "0.80rem", height: "0.80rem" }}
-                  >
-                    <div
-                      className="bg-green-500 rounded-full"
-                      style={{ width: "0.6rem", height: "0.6rem" }}
-                    />
-                  </div>
-                </div>
-                <div className="items-center flex-1 min-w-0">
-                  <div className="flex justify-between mb-1">
-                    <h2 className="text-sm font-semibold text-black">
-                      Mark Green
-                    </h2>
-                    <div className="flex">
-                      <span className="ml-1 text-xs font-medium text-gray-600">
-                        05:41
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between text-sm leading-none truncate">
-                    <span>I do not remember anything</span>
                   </div>
                 </div>
               </div>

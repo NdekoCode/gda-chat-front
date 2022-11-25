@@ -24,7 +24,6 @@ const UserDataInterface = ({ userData }) => {
         settings.main_url + "/chat/user/" + _id,
         setChatUser
       );
-      console.log(data);
     })();
   };
   return (
@@ -96,7 +95,7 @@ const UserDataInterface = ({ userData }) => {
               </div>
             </div>
             <div className="flex justify-between text-sm leading-none truncate">
-              <span>Writing...</span>
+              <span>Hello...</span>
               <span
                 v-else=""
                 className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"
