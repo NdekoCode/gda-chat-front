@@ -67,11 +67,15 @@ export async function fetchData(url) {
   try {
     const response = await fetch(url, params);
     const responseData = await response.json();
-    data = responseData;
-    loading = false;
+    if (response.ok) {
+      data = responseData;
+      loading = fallse;
+    }
+
+    console.log(responseData);
   } catch (error) {
-    console.log("Error lors de la récuperation des donnée");
-    loading = true;
+    console.log("Error lors de la récuperation des donnée " + error.message);
+    loading = false;
   }
   return [data, loading];
 }

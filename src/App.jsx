@@ -12,14 +12,17 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
 import RedirectAuthenticated from "./components/RedirectAuthenticated";
+import ToastMessages from "./components/ToastMessages";
 import ChatContext from "./data/AppContext";
-import { findAndSetData } from "./data/utilsFuns";
+import { arrayIsEmpty, findAndSetData } from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
 function App() {
   const {
     settings,
     setMessages,
+    alert,
+    setAlert,
     setLoading,
     setUserIsAuthenticated,
     userIsAuthenticated,
@@ -27,13 +30,21 @@ function App() {
   useEffect(() => {
     // On verifie si l'utilisateur est
     setUserIsAuthenticated(verifyUserHasAuthenticated());
-    (async () => {
-      const [data, loading] = await findAndSetData(
-        settings.main_url + "/chat",
-        setMessages
-      );
-      setLoading(loading);
-    })();
+    if (!arrayIsEmpty(alert)) {
+      ToastMessages(alert);
+      setAlert([]);
+    }
+    console.log("Not connected", userIsAuthenticated);
+    if (userIsAuthenticated) {
+      console.log("connected");
+      (async () => {
+        const [data, loading] = await findAndSetData(
+          settings.main_url + "/chat",
+          setMessages
+        );
+        setLoading(loading);
+      })();
+    }
   }, [userIsAuthenticated]);
   return (
     <>

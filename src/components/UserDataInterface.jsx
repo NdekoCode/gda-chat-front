@@ -1,28 +1,31 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../data/AppContext";
-import { arrayIsEmpty, findAndSetData } from "../data/utilsFuns";
+import { arrayIsEmpty } from "../data/utilsFuns";
 
-const UserDataInterface = memo(({ userData }) => {
-  const { settings, setSelectedUser, setChatUser } = ChatContext();
-  const [userMessages, setUserMessages] = useState([]);
-  useEffect(() => {
-    (async () => {
-      console.log(settings.token);
-      const [data, loading] = await findAndSetData(
-        settings.main_url + "/chat/user/" + userData._id,
-        setUserMessages,
-        settings.token
-      );
-    })();
-  }, [settings.token]);
+const UserDataInterface = memo(({ user }) => {
+  const { settings, messages, setSelectedUser, userData, setChatUser } =
+    ChatContext();
 
-  const { firstName, lastName, image, username, _id } = userData;
+  const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
+  const [userMessages, setUserMessages] = useState([]);
+
   const handleClick = () => {
     console.log(settings.main_url + "/chat/user/" + _id);
     setChatUser(userMessages);
-    setSelectedUser(userData);
+    setSelectedUser(user);
   };
+
+  useEffect(() => {
+    setUserMessages(
+      messages.filter(
+        (msg) =>
+          (msg.userIdA === _id && msg.userIdB === userData._id) ||
+          (msg.userIdB === _id && msg.userIdA === userData._id)
+      )
+    );
+  }, [setUserMessages]);
+  console.log(userMessages);
   return (
     <button
       onClick={handleClick}

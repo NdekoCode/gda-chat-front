@@ -14,6 +14,7 @@ const Login = () => {
     setLoading,
     setUserData,
     setSettings,
+    setAlert,
   } = ChatContext();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const handleChange = ({ currentTarget }) => {
@@ -25,7 +26,7 @@ const Login = () => {
     evt.preventDefault();
     const loginData = { ...formData };
     // setFormData({ email: "", password: "" });
-    login(loginData)
+    login(loginData, setAlert)
       .then(([alert, result]) => {
         console.log(alert, result);
         if (result) {
