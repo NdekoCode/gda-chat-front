@@ -1,6 +1,10 @@
 import React from "react";
+import ChatContext from "../data/AppContext";
+import { findAndSetData } from "../data/utilsFuns";
 
 const UserDataInterface = ({ userData }) => {
+  const { chatUser, settings, setChatUser } = ChatContext();
+
   const bgRandom = [
     "bg-red-600",
     "gb-green-700",
@@ -8,10 +12,23 @@ const UserDataInterface = ({ userData }) => {
     "bg-blue-800",
     "bg-gray-900",
   ];
-  const { firstName, lastName, image, username } = userData;
+  const { firstName, lastName, image, username, _id } = userData;
   const fullName = `${firstName} ${lastName}`;
+  const handleClick = () => {
+    console.log(settings.main_url + "/chat/user/" + _id);
+    console.log(_id);
+    (async () => {
+      console.log(settings.token);
+      const [data, loading] = await findAndSetData(
+        settings.main_url + "/chat/user/" + _id,
+        setChatUser
+      );
+      console.log(data);
+    })();
+  };
   return (
-    <li
+    <button
+      onClick={handleClick}
       className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
       style={{ paddingTop: "0.65rem", paddingBottom: "0.65rem" }}
     >
@@ -26,10 +43,12 @@ const UserDataInterface = ({ userData }) => {
               />
             ) : (
               <div
-                className={`w-12 h-12 rounded-full text-white ${
+                className={`w-12 h-12 flex items-center justify-center text-xl font-bold rounded-full text-white ${
                   bgRandom[parseInt(Math.random() * bgRandom.length)]
                 }`}
-              ></div>
+              >
+                {username[0].toUpperCase()}
+              </div>
             )}
             <div
               className="absolute bottom-0 right-0 flex items-center justify-center bg-white rounded-full"
@@ -87,7 +106,7 @@ const UserDataInterface = ({ userData }) => {
           </div>
         </div>
       </div>
-    </li>
+    </button>
   );
 };
 
