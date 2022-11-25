@@ -34,7 +34,7 @@ export const ContextProvider = memo(({ children }) => {
   const [userData, setUserData] = useState(getDataStorage("userData"));
   const [selectedUser, setSelectedUser] = useState({});
   const [contactUsers, setContactUsers] = useState([]);
-  const [userIsAuthenticated, setUserIsAuthenticated] = useState(true);
+  const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [searchUser, setSearchUser] = useState("");
   const [messages, setMessages] = useState([]);

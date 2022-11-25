@@ -27,13 +27,18 @@ function App() {
   useEffect(() => {
     // On verifie si l'utilisateur est
     setUserIsAuthenticated(verifyUserHasAuthenticated());
-    (async () => {
-      const [data, loading] = await findAndSetData(
-        settings.main_url + "/chat",
-        setMessages
-      );
-      setLoading(loading);
-    })();
+
+    console.log("Not connected", userIsAuthenticated);
+    if (userIsAuthenticated) {
+      console.log("connected");
+      (async () => {
+        const [data, loading] = await findAndSetData(
+          settings.main_url + "/chat",
+          setMessages
+        );
+        setLoading(loading);
+      })();
+    }
   }, [userIsAuthenticated]);
   return (
     <>

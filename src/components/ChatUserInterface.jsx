@@ -7,7 +7,7 @@ import UserDataInterface from "./UserDataInterface";
 import UserSkeleton from "./UserSkeleton";
 
 const ChatUserInterface = () => {
-  const { users, settings, setUsers } = ChatContext();
+  const { users, settings, isLoading, setUsers, setLoading } = ChatContext();
 
   useEffect(() => {
     (async () => {
@@ -16,6 +16,8 @@ const ChatUserInterface = () => {
         setUsers,
         settings.token
       );
+      setLoading(loading);
+      console.log(loading);
       console.log(data, users);
     })();
   }, [settings.token]);
@@ -46,13 +48,12 @@ const ChatUserInterface = () => {
       </div>
       <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter scrollbar-thumb-rounded scrollbar-thumb-gray">
         <ul className="flex flex-col inline-block w-full h-screen px-2 select-none">
-          {!arrayIsEmpty(users) ? (
-            users.map((user) => (
-              <UserDataInterface key={user._id} userData={user} />
-            ))
-          ) : (
-            <UserSkeleton />
-          )}
+          {JSON.stringify(isLoading)}
+          {!arrayIsEmpty(users)
+            ? users.map((user) => (
+                <UserDataInterface key={user._id} user={user} />
+              ))
+            : isLoading && <UserSkeleton />}
 
           <li
             className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"

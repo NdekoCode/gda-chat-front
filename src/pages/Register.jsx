@@ -5,7 +5,7 @@ import FormInfos from "../components/FormInfos";
 import FormSidebar from "../components/FormSidebar";
 import ChatContext from "../data/AppContext";
 import { getDataStorage } from "../data/utilsFuns";
-import { register } from "../services/AuthApi";
+import { login, register } from "../services/AuthApi";
 
 const Register = () => {
   const {
@@ -31,17 +31,29 @@ const Register = () => {
     setLoading(true);
     evt.preventDefault();
     const loginData = { ...formData };
-    // setFormData({ email: "", password: "" });
-    register(loginData)
-      .then(([alert, result]) => {
-        setLoading(false);
-        const dataStore = getDataStorage("userData");
-        setUserData(dataStore);
-        setSettings((setting) => ({ ...setting, token: dataStore.token }));
-        toast.success(alert.message);
-        return setUserIsAuthenticated(result);
-      })
-      .catch((error) => toast.error(error.message));
+    (async () => {
+      const [data, result] = await register(loginData);
+      try {
+        if (result) {
+          const [alert, resultLogin] = await login(data);
+          if (resultLogin) {
+            setLoading(false);
+            const dataStore = getDataStorage("userData");
+            setUserData(dataStore);
+            setSettings((setting) => ({
+              ...setting,
+              token: dataStore.token,
+            }));
+            toast.success(alert.message);
+            return setUserIsAuthenticated(result);
+          }
+
+          return toast.error(data.message);
+        }
+      } catch (error) {
+        return toast.error(error.message);
+      }
+    })();
   };
 
   return (

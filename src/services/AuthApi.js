@@ -15,10 +15,10 @@ export function verifyUserHasAuthenticated() {
   const token = getDataStorage("user_token");
   const isValid = token ? tokenIsValid(token) : false;
   if (!isValid) {
-    console.log("TOken invalide");
-    return removeItem("user_token");
+    console.log("Token invalide");
+    removeItem("user_token");
+    return false;
   }
-
   console.log("Token valide");
   return isValid;
 }
@@ -94,9 +94,6 @@ export async function register(dataForm) {
   const registerUrl = API_URL + "/auth/register";
   delete dataForm.confpassword;
   const [responseUserData] = await fetchUserConnect(registerUrl, dataForm);
-  // console.group();
-  // console.log(response);
-  // console.groupEnd();
   const { alert } = responseUserData;
 
   if (alert.statusCode < 400) {
@@ -104,7 +101,7 @@ export async function register(dataForm) {
       email: dataForm.email,
       password: dataForm.password,
     };
-    return await login(userData);
+    return [userData, true];
   }
   return [alert, false];
 }

@@ -26,7 +26,7 @@ const MessagesContainer = () => {
             />
           ))}
           {/* <Message sender={false} msg="Nice to meet you arick" /> */}
-          <Message sender={true} msg="HI my name is arick" />
+          {/* <Message sender={true} msg="HI my name is arick" /> */}
         </div>
       </div>
       <FormMessage />
