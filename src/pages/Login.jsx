@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import FormFooter from "../components/FormFooter";
 import FormInfos from "../components/FormInfos";
 import FormSidebar from "../components/FormSidebar";
@@ -7,8 +8,13 @@ import { getDataStorage } from "../data/utilsFuns";
 import { login } from "../services/AuthApi";
 
 const Login = () => {
-  const { setUserIsAuthenticated, isLoading, setLoading, setUserData } =
-    ChatContext();
+  const {
+    setUserIsAuthenticated,
+    isLoading,
+    setLoading,
+    setUserData,
+    setSettings,
+  } = ChatContext();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
@@ -19,11 +25,24 @@ const Login = () => {
     evt.preventDefault();
     const loginData = { ...formData };
     // setFormData({ email: "", password: "" });
-    login(loginData).then((res) => {
-      setLoading(false);
-      setUserData(getDataStorage("userData"));
-      return setUserIsAuthenticated(res);
-    });
+    login(loginData)
+      .then(([alert, result]) => {
+        console.log(alert, result);
+        if (result) {
+          const dataStore = getDataStorage("userData");
+          setUserData(dataStore);
+          setSettings((setting) => ({
+            ...setting,
+            token: "Bearer " + dataStore.token,
+          }));
+          toast.success(alert.message);
+          return setUserIsAuthenticated(result);
+        }
+        setLoading(false);
+        toast.error(alert.message);
+        return result;
+      })
+      .catch((error) => toast.error(error.message));
   };
 
   return (
@@ -39,7 +58,6 @@ const Login = () => {
         />
         {/* Login */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 relative mt-12">
-          {JSON.stringify(formData)}
           {/* Login box */}
           <form
             className="flex flex-1 flex-col  justify-center space-y-5 max-w-md"

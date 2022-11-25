@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import FormFooter from "../components/FormFooter";
 import FormInfos from "../components/FormInfos";
 import FormSidebar from "../components/FormSidebar";
@@ -7,8 +8,13 @@ import { getDataStorage } from "../data/utilsFuns";
 import { register } from "../services/AuthApi";
 
 const Register = () => {
-  const { setUserIsAuthenticated, isLoading, setLoading, setUserData } =
-    ChatContext();
+  const {
+    setUserIsAuthenticated,
+    setSettings,
+    isLoading,
+    setLoading,
+    setUserData,
+  } = ChatContext();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -26,11 +32,16 @@ const Register = () => {
     evt.preventDefault();
     const loginData = { ...formData };
     // setFormData({ email: "", password: "" });
-    register(loginData).then((res) => {
-      setLoading(false);
-      setUserData(getDataStorage("userData"));
-      return setUserIsAuthenticated(res);
-    });
+    register(loginData)
+      .then(([alert, result]) => {
+        setLoading(false);
+        const dataStore = getDataStorage("userData");
+        setUserData(dataStore);
+        setSettings((setting) => ({ ...setting, token: dataStore.token }));
+        toast.success(alert.message);
+        return setUserIsAuthenticated(result);
+      })
+      .catch((error) => toast.error(error.message));
   };
 
   return (

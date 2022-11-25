@@ -52,7 +52,8 @@ export function removeItem(key) {
 export function setDataStorage(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
-export async function fetchData(url, token = "") {
+export async function fetchData(url) {
+  const token = getDataStorage("user_token");
   let data = [],
     loading = true;
   const params = {
@@ -74,11 +75,15 @@ export async function fetchData(url, token = "") {
   }
   return [data, loading];
 }
-export async function findAndSetData(url, setData, token) {
-  const [data, loading] = await fetchData(url, token);
+export async function findAndSetData(url, setData) {
+  const [data, loading] = await fetchData(url);
   if (data !== undefined && data !== null) {
     setData(data);
   }
   return [data, loading];
+}
+
+export function objectIsEmpty(obj) {
+  return Object.keys(obj).length === 0;
 }
 export const API_URL = "http://localhost:3500/api/v1";
