@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../data/AppContext";
-import { arrayIsEmpty } from "../data/utilsFuns";
+import { arrayIsEmpty, formatTime } from "../data/utilsFuns";
 
 const UserDataInterface = memo(({ user }) => {
   const { messages, setSelectedUser, userData, setChatUser } = ChatContext();
@@ -22,7 +22,6 @@ const UserDataInterface = memo(({ user }) => {
     setUserMessages(chatMessages);
     setChatUser(chatMessages);
   }, [setUserMessages, setChatUser]);
-  console.log(userMessages);
   return (
     <li
       className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
@@ -85,7 +84,11 @@ const UserDataInterface = memo(({ user }) => {
                   />
                 </svg>
                 <span className="ml-1 text-xs font-medium text-gray-600">
-                  12.52
+                  {!arrayIsEmpty(userMessages)
+                    ? formatTime(
+                        userMessages[userMessages.length - 1].createdAt
+                      )
+                    : ""}
                 </span>
               </div>
             </div>
