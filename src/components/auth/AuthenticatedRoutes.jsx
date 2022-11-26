@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import ChatContext from "../data/AppContext";
+import ChatContext from "../../data/AppContext";
 
 const AuthenticatedRoutes = ({ children }) => {
   {

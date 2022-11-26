@@ -1,8 +1,8 @@
 import React from "react";
-import ChatContainer from "../components/ChatContainer";
-import ChatSidebar from "../components/ChatSidebar";
-import ChatUserInterface from "../components/ChatUserInterface";
-import NoSelectedUserMessage from "../components/NoSelectedUserMessage";
+import ChatContainer from "../components/Messages/ChatContainer";
+import ChatSidebar from "../components/users/ChatSidebar";
+import ChatUserInterface from "../components/users/ChatUserInterface";
+import NoSelectedUserMessage from "../components/users/NoSelectedUserMessage";
 import ChatContext from "../data/AppContext";
 import { objectIsEmpty } from "../data/utilsFuns";
 

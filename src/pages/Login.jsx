@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import FormFooter from "../components/FormFooter";
-import FormInfos from "../components/FormInfos";
-import FormSidebar from "../components/FormSidebar";
+import FormFooter from "../components/auth/FormFooter";
+import FormInfos from "../components/auth/FormInfos";
+import FormSidebar from "../components/auth/FormSidebar";
 import ChatContext from "../data/AppContext";
 import { getDataStorage } from "../data/utilsFuns";
 import { login } from "../services/AuthApi";

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import ChatContext from "../data/AppContext";
-import { arrayIsEmpty, findAndSetData } from "../data/utilsFuns";
+import ChatContext from "../../data/AppContext";
+import { arrayIsEmpty, findAndSetData } from "../../data/utilsFuns";
+import StickyNavbar from "../StickyNavbar";
 import SearchFormInterface from "./SearchFormInterface";
-import StickyNavbar from "./StickyNavbar";
 import UserDataInterface from "./UserDataInterface";
 import UserSkeleton from "./UserSkeleton";
 

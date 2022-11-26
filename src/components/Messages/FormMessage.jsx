@@ -1,16 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import ChatContext from "../data/AppContext";
+import ChatContext from "../../data/AppContext";
 
 const FormMessage = () => {
-  const {
-    settings,
-    setLoading,
-    selectedUser,
-    userData,
-    setChatUser,
-    setAlert,
-  } = ChatContext();
+  const { settings, setLoading, selectedUser, userData, setChatUser, socket } =
+    ChatContext();
   console.log(selectedUser);
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
@@ -42,6 +36,7 @@ const FormMessage = () => {
         }
       );
       const responseData = await response.json();
+      socket.emit("send_message", dataSend);
       if (response.ok) {
         loading = false;
         toast.success(responseData.alert.message);

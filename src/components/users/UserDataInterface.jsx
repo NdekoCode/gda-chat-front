@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
-import ChatContext from "../data/AppContext";
-import { arrayIsEmpty, formatTime } from "../data/utilsFuns";
+import ChatContext from "../../data/AppContext";
+import { arrayIsEmpty, formatTime } from "../../data/utilsFuns";
 
 const UserDataInterface = memo(({ user }) => {
   const { messages, setSelectedUser, userData, setChatUser } = ChatContext();
