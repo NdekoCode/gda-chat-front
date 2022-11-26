@@ -1,38 +1,36 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../data/AppContext";
-import { arrayIsEmpty } from "../data/utilsFuns";
+import { arrayIsEmpty, formatTime } from "../data/utilsFuns";
 
 const UserDataInterface = memo(({ user }) => {
-  const { settings, messages, setSelectedUser, userData, setChatUser } =
-    ChatContext();
+  const { messages, setSelectedUser, userData, setChatUser } = ChatContext();
 
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
   const [userMessages, setUserMessages] = useState([]);
-
+  const chatMessages = messages.filter(
+    (msg) =>
+      (msg.userIdA === _id && msg.userIdB === userData.userId) ||
+      (msg.userIdB === _id && msg.userIdA === userData.userId)
+  );
   const handleClick = () => {
-    console.log(settings.main_url + "/chat/user/" + _id);
     setChatUser(userMessages);
     setSelectedUser(user);
   };
 
   useEffect(() => {
-    setUserMessages(
-      messages.filter(
-        (msg) =>
-          (msg.userIdA === _id && msg.userIdB === userData._id) ||
-          (msg.userIdB === _id && msg.userIdA === userData._id)
-      )
-    );
-  }, [setUserMessages]);
-  console.log(userMessages);
+    setUserMessages(chatMessages);
+    setChatUser(chatMessages);
+  }, [setUserMessages, setChatUser]);
   return (
-    <button
-      onClick={handleClick}
+    <li
       className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
       style={{ paddingTop: "0.65rem", paddingBottom: "0.65rem" }}
     >
-      <div className="flex justify-between w-full focus:outline-none">
+      <button
+        onClick={handleClick}
+        className="flex justify-between w-full focus:outline-none"
+      >
         <div className="flex justify-between w-full">
           <div className="relative flex items-center justify-center w-12 h-12 ml-2 mr-3 text-xl font-semibold text-white bg-blue-500 rounded-full flex-no-shrink">
             {image ? (
@@ -86,7 +84,11 @@ const UserDataInterface = memo(({ user }) => {
                   />
                 </svg>
                 <span className="ml-1 text-xs font-medium text-gray-600">
-                  12.52
+                  {!arrayIsEmpty(userMessages)
+                    ? formatTime(
+                        userMessages[userMessages.length - 1].createdAt
+                      )
+                    : ""}
                 </span>
               </div>
             </div>
@@ -105,8 +107,8 @@ const UserDataInterface = memo(({ user }) => {
             </div>
           </div>
         </div>
-      </div>
-    </button>
+      </button>
+    </li>
   );
 });
 

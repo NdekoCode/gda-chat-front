@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import IO from "socket.io-client";
 import AuthenticatedRoutes from "./components/AuthenticatedRoutes";
 import RedirectAuthenticated from "./components/RedirectAuthenticated";
 import ToastMessages from "./components/ToastMessages";
@@ -17,11 +18,13 @@ import ChatContext from "./data/AppContext";
 import { arrayIsEmpty, findAndSetData } from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
+const socket = IO.connect("/localhost:3500");
 function App() {
   const {
     settings,
     setMessages,
     alert,
+    setSocket,
     setAlert,
     setLoading,
     setUserIsAuthenticated,
@@ -36,7 +39,7 @@ function App() {
     }
     console.log("Not connected", userIsAuthenticated);
     if (userIsAuthenticated) {
-      console.log("connected");
+      setSocket(socket);
       (async () => {
         const [data, loading] = await findAndSetData(
           settings.main_url + "/chat",
@@ -45,7 +48,7 @@ function App() {
         setLoading(loading);
       })();
     }
-  }, [userIsAuthenticated]);
+  }, [userIsAuthenticated, socket]);
   return (
     <>
       <Routes>

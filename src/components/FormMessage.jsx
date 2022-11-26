@@ -1,8 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import ChatContext from "../data/AppContext";
 
 const FormMessage = () => {
+  const {
+    settings,
+    setLoading,
+    selectedUser,
+    userData,
+    setChatUser,
+    setAlert,
+  } = ChatContext();
+  console.log(selectedUser);
+  const [msg, setMsg] = useState();
+  const handleMessage = (evt) => {
+    const value = evt.target.value;
+    setMsg(value);
+  };
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
+    setMsg("");
+    (async () => {
+      const dataSend = {
+        userIdA: userData.userId,
+        userIdB: selectedUser._id,
+        message: msg,
+        send_by: userData.userId,
+      };
+
+      let loading = true;
+      const response = await fetch(
+        settings.main_url + "/chat/send/" + selectedUser._id,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: settings.token,
+          },
+          body: JSON.stringify(dataSend),
+        }
+      );
+      const responseData = await response.json();
+      if (response.ok) {
+        loading = false;
+        toast.success(responseData.alert.message);
+        setChatUser((d) => [...d, dataSend]);
+        console.log(responseData);
+      } else {
+        toast.error(responseData.alert.message);
+        loading = false;
+      }
+      setLoading(loading);
+      console.log(responseData);
+    })();
+  };
   return (
-    <form className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">
+    <form
+      onSubmit={handleSubmit}
+      className="fixed bottom-0 flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400"
+      method="POST"
+    >
       <div className="w-full flex items">
         <span className="absolute inset-y-0 left-0 flex items-center pl-6">
           <label
@@ -51,7 +109,9 @@ const FormMessage = () => {
           type="text"
           className="w-full flex items-center  scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 py-2 pl-10 text-sm bg-white border border-transparent appearance-none  placeholder-gray-800 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue resize-none"
           style={{ borderRadius: 25 }}
+          value={msg}
           name="message"
+          onChange={handleMessage}
           placeholder="Message..."
           autoComplete="off"
         ></textarea>

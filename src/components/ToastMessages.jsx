@@ -1,14 +1,16 @@
 import { toast } from "react-toastify";
 
-const ToastMessages = ({ type, message }) => {
-  if (type === "success") {
-    return toast.success(message);
-  } else if (type === "danger") {
-    return toast.error(message);
-  } else if (type === "warning") {
-    return toast.warn(message);
+const ToastMessages = (alert) => {
+  if (alert.type && alert.message) {
+    if (alert.type === "success") {
+      return toast.success(alert.message);
+    } else if (alert.type === "danger") {
+      return toast.error(alert.message);
+    } else if (alert.type === "warning") {
+      return toast.warn(alert.message);
+    }
+    return toast.info(alert.message);
   }
-  return toast.info(message);
 };
 
 export default ToastMessages;
