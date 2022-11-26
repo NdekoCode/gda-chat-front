@@ -49,7 +49,7 @@ const Login = () => {
   return (
     <div className="flex min-h-screen">
       {/* Container */}
-      <div className="flex flex-row w-full">
+      <div className="flex flex-row w-full bg-gray-50">
         {/* Sidebar */}
 
         <FormSidebar

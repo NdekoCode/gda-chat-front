@@ -9,7 +9,7 @@ const MessagesContainer = () => {
   const { userData, chatUser } = ChatContext();
   return (
     <div
-      className="top-0 bottom-0 left-0 right-0 flex flex-col flex-1 overflow-hidden bg-transparent bg-bottom bg-contain bg-chat center center "
+      className="top-0 bottom-0 left-0 right-0 flex flex-col flex-1 overflow-hidden bg-transparent bg-bottom bg-contain bg-chat center center overflow-scroll "
       style={{ backgroundImage: `url('${imageChat}')` }}
     >
       <div className="self-center flex-1 w-full">

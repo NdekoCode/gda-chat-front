@@ -31,12 +31,14 @@ const UserDataInterface = memo(({ user }) => {
   }, [setUserMessages]);
   console.log(userMessages);
   return (
-    <button
-      onClick={handleClick}
+    <li
       className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
       style={{ paddingTop: "0.65rem", paddingBottom: "0.65rem" }}
     >
-      <div className="flex justify-between w-full focus:outline-none">
+      <button
+        onClick={handleClick}
+        className="flex justify-between w-full focus:outline-none"
+      >
         <div className="flex justify-between w-full">
           <div className="relative flex items-center justify-center w-12 h-12 ml-2 mr-3 text-xl font-semibold text-white bg-blue-500 rounded-full flex-no-shrink">
             {image ? (
@@ -109,8 +111,8 @@ const UserDataInterface = memo(({ user }) => {
             </div>
           </div>
         </div>
-      </div>
-    </button>
+      </button>
+    </li>
   );
 });
 

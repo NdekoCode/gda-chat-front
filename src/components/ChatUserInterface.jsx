@@ -45,8 +45,8 @@ const ChatUserInterface = () => {
           </li>
         </ul>
       </div>
-      <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter scrollbar-thumb-rounded scrollbar-thumb-gray">
-        <ul className="flex flex-col inline-block w-full h-screen px-2 select-none">
+      <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter  scrollbar-thumb-rounded scrollbar-thumb-gray">
+        <ul className="flex flex-col inline-block w-full h-screen pb-32 px-2 select-none">
           {!arrayIsEmpty(users)
             ? users.map((user) => (
                 <UserDataInterface key={user._id} user={user} />
