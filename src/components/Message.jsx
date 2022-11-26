@@ -1,6 +1,8 @@
+import moment from "moment";
 import React from "react";
 
-const Message = ({ sender, msg }) => {
+const Message = ({ sender, msg, date }) => {
+  console.log(msg);
   return (
     <div
       className={`w-3/4 my-2 max-w-max ${sender ? "self-end" : "self-start"}`}
@@ -13,6 +15,15 @@ const Message = ({ sender, msg }) => {
         } shadow"`}
       >
         {msg}
+        <div className="flex justify-end">
+          <div
+            className={`text-xs -mb-3 mt-1 
+              ${sender ? "text-gray-300" : "text-gray-400"}
+              `}
+          >
+            {`${moment(date).fromNow()} | ${moment(date).format("H:m")}`}
+          </div>
+        </div>
       </div>
     </div>
   );

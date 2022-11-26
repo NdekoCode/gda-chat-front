@@ -6,7 +6,7 @@
 // TODO: #6 - Uplaod user image
 // TODO: #16  - User register
 // TODO: #17  - User login
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,11 +18,26 @@ import ChatContext from "./data/AppContext";
 import { arrayIsEmpty, findAndSetData } from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
-const socket = IO.connect("/localhost:3500");
+const socket = IO.connect("http://localhost:3500");
 function App() {
+  const [isSocketConnect, setIsSocketConnect] = useState(socket.connected);
+  const [lastConnect, setLastConnect] = useState(null);
+  useEffect(() => {
+    socket.on("connect", () => {
+      setIsSocketConnect(true);
+    });
+    socket.on("disconnect", () => {
+      setIsSocketConnect(false);
+    });
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, []);
   const {
     settings,
     setMessages,
+    userData,
     alert,
     setSocket,
     setAlert,
@@ -31,6 +46,9 @@ function App() {
     userIsAuthenticated,
   } = ChatContext();
   useEffect(() => {
+    socket.on("connect", (socket) => {
+      console.log(socket, " User connected ");
+    });
     // On verifie si l'utilisateur est
     setUserIsAuthenticated(verifyUserHasAuthenticated());
     if (!arrayIsEmpty(alert)) {
@@ -40,15 +58,17 @@ function App() {
     console.log("Not connected", userIsAuthenticated);
     if (userIsAuthenticated) {
       setSocket(socket);
+      socket.emit("user_connected", userData);
       (async () => {
         const [data, loading] = await findAndSetData(
           settings.main_url + "/chat",
           setMessages
         );
         setLoading(loading);
+        console.log(data);
       })();
     }
-  }, [userIsAuthenticated, socket]);
+  }, [setUserIsAuthenticated, userIsAuthenticated]);
   return (
     <>
       <Routes>
