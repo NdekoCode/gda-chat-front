@@ -1,21 +1,38 @@
 import React, { memo, useEffect, useState } from "react";
-import ChatContext from "../data/AppContext";
-import { arrayIsEmpty, formatTime } from "../data/utilsFuns";
+import ChatContext from "../../data/AppContext";
+import { arrayIsEmpty, formatTime } from "../../data/utilsFuns";
 
 const UserDataInterface = memo(({ user }) => {
-  const { messages, setSelectedUser, userData, setChatUser } = ChatContext();
-
+  const { messages, setSelectedUser, userData, setChatUser, socket } =
+    ChatContext();
+  console.log(messages);
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
   const [userMessages, setUserMessages] = useState([]);
   const chatMessages = messages.filter(
     (msg) =>
-      (msg.userIdA === _id && msg.userIdB === userData.userId) ||
-      (msg.userIdB === _id && msg.userIdA === userData.userId)
+      (msg.sender === _id && msg.receiver === userData.userId) ||
+      (msg.receiver === _id && msg.sender === userData.userId)
   );
   const handleClick = () => {
-    setChatUser(userMessages);
     setSelectedUser(user);
+    if (socket !== null && socket !== undefined) {
+      console.log(user._id);
+      socket.emit("join_user", {
+        userConnectId: userData.userId,
+        userInterlocutorId: user._id,
+      });
+
+      socket.on("load_messages", (messagesChat) => {
+        const chatMessages = JSON.parse(messagesChat.messages);
+        console.log(chatMessages);
+        if (!arrayIsEmpty(chatMessages)) {
+          setChatUser(chatMessages);
+        } else {
+          setChatUser(userMessages);
+        }
+      });
+    }
   };
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React from "react";
-import ChatContext from "../data/AppContext";
-import StickyButton from "./StickyButton";
+import ChatContext from "../../data/AppContext";
+import StickyButton from "../StickyButton";
 
 const ChatSidebar = () => {
   const { stateSticky, userData, handleVisible } = ChatContext();

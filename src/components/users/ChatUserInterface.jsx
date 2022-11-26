@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
-import ChatContext from "../data/AppContext";
-import { arrayIsEmpty, findAndSetData } from "../data/utilsFuns";
+import ChatContext from "../../data/AppContext";
+import { arrayIsEmpty, findAndSetData } from "../../data/utilsFuns";
+import StickyNavbar from "../StickyNavbar";
 import SearchFormInterface from "./SearchFormInterface";
-import StickyNavbar from "./StickyNavbar";
 import UserDataInterface from "./UserDataInterface";
 import UserSkeleton from "./UserSkeleton";
 
 const ChatUserInterface = () => {
-  const { users, settings, isLoading, setUsers, setLoading } = ChatContext();
+  const { users, settings, isLoading, setUsers, setLoading, socket, userData } =
+    ChatContext();
 
   useEffect(() => {
     (async () => {
@@ -17,6 +18,11 @@ const ChatUserInterface = () => {
         setUsers,
         settings.token
       );
+      if (!arrayIsEmpty(data)) {
+        for (let d of data) {
+          socket.to(d._id).emit("user_is_connected", userData);
+        }
+      }
       setLoading(loading);
     })();
   }, [settings.token, setLoading]);
@@ -48,9 +54,10 @@ const ChatUserInterface = () => {
       <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter  scrollbar-thumb-rounded scrollbar-thumb-gray">
         <ul className="flex flex-col inline-block w-full h-screen pb-32 px-2 select-none">
           {!arrayIsEmpty(users)
-            ? users.map((user) => (
-                <UserDataInterface key={user._id} user={user} />
-              ))
+            ? users.map((user) => {
+                if (user._id !== userData.userId)
+                  return <UserDataInterface key={user._id} user={user} />;
+              })
             : isLoading && <UserSkeleton />}
 
           <li

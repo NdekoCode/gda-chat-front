@@ -1,6 +1,6 @@
 import React from "react";
-import imageChat from "../assets/img/WhatsappImage.png";
-import ChatContext from "../data/AppContext";
+import imageChat from "../../assets/img/WhatsappImage.png";
+import ChatContext from "../../data/AppContext";
 import DateMessage from "./DateMessage";
 import FormMessage from "./FormMessage";
 import Message from "./Message";
@@ -18,10 +18,11 @@ const MessagesContainer = () => {
             Channel was created
           </div>
           <DateMessage date=" May 6" />
-          {chatUser.map(({ send_by, message }, index) => (
+          {chatUser.map(({ sender, message, createdAt }, index) => (
             <Message
               key={index}
-              sender={send_by === userData.userId}
+              sender={sender === userData.userId}
+              date={createdAt}
               msg={message}
             />
           ))}

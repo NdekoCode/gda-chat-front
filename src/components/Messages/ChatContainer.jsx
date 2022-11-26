@@ -1,6 +1,6 @@
 import React from "react";
+import UserChatView from "../users/UserChatView";
 import MessagesContainer from "./MessagesContainer";
-import UserChatView from "./UserChatView";
 
 const ChatContainer = () => {
   return (

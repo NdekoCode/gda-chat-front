@@ -1,7 +1,7 @@
 import React from "react";
-import ChatContext from "../data/AppContext";
-import { objectIsEmpty } from "../data/utilsFuns";
-import StickyButton from "./StickyButton";
+import ChatContext from "../../data/AppContext";
+import { objectIsEmpty } from "../../data/utilsFuns";
+import StickyButton from "../StickyButton";
 const UserChatView = () => {
   const { selectedUser } = ChatContext();
   return (
