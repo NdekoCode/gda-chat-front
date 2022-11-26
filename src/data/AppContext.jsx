@@ -41,6 +41,7 @@ export const ContextProvider = memo(({ children }) => {
   const [users, setUsers] = useState([]);
   const [alert, setAlert] = useState([]);
   const [chatUser, setChatUser] = useState([]);
+  const [socket, setSocket] = useState({});
 
   const [stateSticky, setStateVisible] = useState({
     visible: false,
@@ -75,6 +76,8 @@ export const ContextProvider = memo(({ children }) => {
     selectedUser,
     setSelectedUser,
     contactUsers,
+    socket,
+    setSocket,
     setContactUsers,
   };
 

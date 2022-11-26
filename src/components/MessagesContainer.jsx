@@ -13,14 +13,14 @@ const MessagesContainer = () => {
       style={{ backgroundImage: `url('${imageChat}')` }}
     >
       <div className="self-center flex-1 w-full">
-        <div className="relative flex flex-col px-3 py-1 m-auto">
+        <div className="relative flex flex-col px-3 py-1 m-auto mb-24">
           <div className="self-center px-2 py-1 mx-0 my-1 text-sm  text-gray-700 bg-white border border-gray-200 rounded-full shadow rounded-tg">
             Channel was created
           </div>
           <DateMessage date=" May 6" />
-          {chatUser.map(({ send_by, message, _id }) => (
+          {chatUser.map(({ send_by, message }, index) => (
             <Message
-              key={_id}
+              key={index}
               sender={send_by === userData.userId}
               msg={message}
             />

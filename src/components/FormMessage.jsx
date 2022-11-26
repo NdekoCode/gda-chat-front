@@ -1,8 +1,16 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import ChatContext from "../data/AppContext";
 
 const FormMessage = () => {
-  const { settings, selectedUser, userData } = ChatContext();
+  const {
+    settings,
+    setLoading,
+    selectedUser,
+    userData,
+    setChatUser,
+    setAlert,
+  } = ChatContext();
   console.log(selectedUser);
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
@@ -12,15 +20,16 @@ const FormMessage = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    const dataSend = {
-      userIdA: userData.userId,
-      userIdB: selectedUser._id,
-      message: msg,
-      send_by: userData.userId,
-    };
-    console.log(dataSend);
     setMsg("");
     (async () => {
+      const dataSend = {
+        userIdA: userData.userId,
+        userIdB: selectedUser._id,
+        message: msg,
+        send_by: userData.userId,
+      };
+
+      let loading = true;
       const response = await fetch(
         settings.main_url + "/chat/send/" + selectedUser._id,
         {
@@ -33,6 +42,16 @@ const FormMessage = () => {
         }
       );
       const responseData = await response.json();
+      if (response.ok) {
+        loading = false;
+        toast.success(responseData.alert.message);
+        setChatUser((d) => [...d, dataSend]);
+        console.log(responseData);
+      } else {
+        toast.error(responseData.alert.message);
+        loading = false;
+      }
+      setLoading(loading);
       console.log(responseData);
     })();
   };

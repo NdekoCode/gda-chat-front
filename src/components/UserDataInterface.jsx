@@ -8,27 +8,20 @@ const UserDataInterface = memo(({ user }) => {
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
   const [userMessages, setUserMessages] = useState([]);
-
+  const chatMessages = messages.filter(
+    (msg) =>
+      (msg.userIdA === _id && msg.userIdB === userData.userId) ||
+      (msg.userIdB === _id && msg.userIdA === userData.userId)
+  );
   const handleClick = () => {
     setChatUser(userMessages);
     setSelectedUser(user);
   };
 
   useEffect(() => {
-    setUserMessages(
-      messages.filter((msg) => {
-        console.log(
-          msg.userIdB === userData.userId,
-          msg.userIdB,
-          userData.userId
-        );
-        return (
-          (msg.userIdA === _id && msg.userIdB === userData.userId) ||
-          (msg.userIdB === _id && msg.userIdA === userData.userId)
-        );
-      })
-    );
-  }, [setUserMessages]);
+    setUserMessages(chatMessages);
+    setChatUser(chatMessages);
+  }, [setUserMessages, setChatUser]);
   console.log(userMessages);
   return (
     <li
