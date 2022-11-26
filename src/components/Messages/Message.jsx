@@ -2,7 +2,6 @@ import moment from "moment";
 import React from "react";
 
 const Message = ({ sender, msg, date }) => {
-  console.log(msg);
   return (
     <div
       className={`w-3/4 my-2 max-w-max ${sender ? "self-end" : "self-start"}`}

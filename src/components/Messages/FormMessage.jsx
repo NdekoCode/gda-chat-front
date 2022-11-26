@@ -8,6 +8,8 @@ const FormMessage = () => {
   console.log(selectedUser);
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
+    console.log(socket);
+    socket.emit("user_writing", userData);
     const value = evt.target.value;
     setMsg(value);
   };
@@ -17,10 +19,9 @@ const FormMessage = () => {
     setMsg("");
     (async () => {
       const dataSend = {
-        userIdA: userData.userId,
-        userIdB: selectedUser._id,
+        sender: userData.userId,
+        receiver: selectedUser._id,
         message: msg,
-        send_by: userData.userId,
       };
 
       let loading = true;
