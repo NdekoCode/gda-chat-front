@@ -1,47 +1,70 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../../data/AppContext";
-import { arrayIsEmpty, formatTime } from "../../data/utilsFuns";
+import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
 
 const UserDataInterface = memo(({ user }) => {
-  const { messages, setSelectedUser, userData, setChatUser, socket } =
-    ChatContext();
-  console.log(messages);
+  const {
+    messages,
+    selectedUser,
+    setSelectedUser,
+    userData,
+    setChatUser,
+    chatUser,
+    socket,
+    setActiveChatId,
+  } = ChatContext();
+  // const [userMessages, setUserMessages] = useState([]);
+  const [lastMessage, setLastMessage] = useState({
+    userId: user._id,
+    content: {},
+  });
+  const addLastMessage = (msg) => {
+    const user =
+      lastMessage.userId === msg.receiver || lastMessage.userId === msg.sender;
+    if (user) {
+      setLastMessage((state) => ({ ...state, content: msg }));
+    }
+  };
+  socket.on("received_message", (msg) => {
+    addLastMessage(msg);
+  });
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
-  const [userMessages, setUserMessages] = useState([]);
   const chatMessages = messages.filter(
     (msg) =>
       (msg.sender === _id && msg.receiver === userData.userId) ||
       (msg.receiver === _id && msg.sender === userData.userId)
   );
   const handleClick = () => {
-    setSelectedUser(user);
+    setSelectedUser((d) => ({ ...d, user: user }));
+    setActiveChatId(user._id);
     if (socket !== null && socket !== undefined) {
-      console.log(user._id);
       socket.emit("join_user", {
         userConnectId: userData.userId,
         userInterlocutorId: user._id,
       });
 
       socket.on("load_messages", (messagesChat) => {
-        const chatMessages = JSON.parse(messagesChat.messages);
-        console.log(chatMessages);
+        const chatMessages = JSON.parse(messagesChat);
         if (!arrayIsEmpty(chatMessages)) {
-          setChatUser(chatMessages);
-        } else {
-          setChatUser(userMessages);
+          setSelectedUser((d) => ({ ...d, messages: chatMessages }));
+          addLastMessage(chatMessages[chatMessages.length - 1]);
         }
       });
     }
   };
 
   useEffect(() => {
-    setUserMessages(chatMessages);
+    // setUserMessages(chatMessages);
     setChatUser(chatMessages);
-  }, [setUserMessages, setChatUser]);
+    addLastMessage(chatMessages[chatMessages.length - 1]);
+  }, [setChatUser]);
+  console.log(chatUser);
   return (
     <li
-      className="flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200"
+      className={`flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200 ${
+        user._id === selectedUser.user._id && "bg-gray-200"
+      }`}
       style={{ paddingTop: "0.65rem", paddingBottom: "0.65rem" }}
     >
       <button
@@ -101,18 +124,16 @@ const UserDataInterface = memo(({ user }) => {
                   />
                 </svg>
                 <span className="ml-1 text-xs font-medium text-gray-600">
-                  {!arrayIsEmpty(userMessages)
-                    ? formatTime(
-                        userMessages[userMessages.length - 1].createdAt
-                      )
+                  {!objectIsEmpty(lastMessage.content)
+                    ? formatTime(lastMessage.content.createdAt)
                     : ""}
                 </span>
               </div>
             </div>
             <div className="flex justify-between text-sm leading-none truncate">
               <span className="text-gray-500">
-                {!arrayIsEmpty(userMessages)
-                  ? userMessages[userMessages.length - 1].message
+                {!objectIsEmpty(lastMessage.content)
+                  ? lastMessage.content.message
                   : ""}{" "}
               </span>
               <span

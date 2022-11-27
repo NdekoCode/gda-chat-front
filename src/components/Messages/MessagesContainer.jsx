@@ -1,12 +1,10 @@
 import React from "react";
 import imageChat from "../../assets/img/WhatsappImage.png";
-import ChatContext from "../../data/AppContext";
 import DateMessage from "./DateMessage";
 import FormMessage from "./FormMessage";
 import Message from "./Message";
 
-const MessagesContainer = () => {
-  const { userData, chatUser } = ChatContext();
+const MessagesContainer = ({ messages, userData }) => {
   return (
     <div
       className="top-0 bottom-0 left-0 right-0 flex flex-col flex-1 overflow-hidden bg-transparent bg-bottom bg-contain bg-chat center center overflow-scroll "
@@ -18,7 +16,7 @@ const MessagesContainer = () => {
             Channel was created
           </div>
           <DateMessage date=" May 6" />
-          {chatUser.map(({ sender, message, createdAt }, index) => (
+          {messages.map(({ sender, message, createdAt }, index) => (
             <Message
               key={index}
               sender={sender === userData.userId}
@@ -28,6 +26,7 @@ const MessagesContainer = () => {
           ))}
           {/* <Message sender={false} msg="Nice to meet you arick" /> */}
           {/* <Message sender={true} msg="HI my name is arick" /> */}
+          <div className="hidden" id="bottom"></div>
         </div>
       </div>
       <FormMessage />
