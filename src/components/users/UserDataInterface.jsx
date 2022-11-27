@@ -10,7 +10,6 @@ const UserDataInterface = memo(({ user }) => {
     setSelectedUser,
     userData,
     setChatUser,
-    chatUser,
     socket,
     setActiveChatId,
   } = ChatContext();
@@ -19,6 +18,7 @@ const UserDataInterface = memo(({ user }) => {
     userId: user._id,
     content: {},
   });
+  const [newMessage, setNewMessage] = useState(false);
   const [userTyping, setUserTyping] = useState({
     userId: null,
     isTyping: false,
@@ -56,6 +56,7 @@ const UserDataInterface = memo(({ user }) => {
     );
   });
   socket.on("received_message", (msg) => {
+    setNewMessage(true);
     addLastMessage(msg);
   });
   const { firstName, lastName, image, username, _id } = user;
@@ -66,6 +67,7 @@ const UserDataInterface = memo(({ user }) => {
       (msg.receiver === _id && msg.sender === userData.userId)
   );
   const handleClick = () => {
+    setNewMessage(false);
     setSelectedUser((d) => ({ ...d, user: user }));
     setActiveChatId(user._id);
     if (socket !== null && socket !== undefined) {
@@ -85,6 +87,7 @@ const UserDataInterface = memo(({ user }) => {
   };
 
   useEffect(() => {
+    setNewMessage(false);
     // setUserMessages(chatMessages);
     setChatUser(chatMessages);
     addLastMessage(chatMessages[chatMessages.length - 1]);
@@ -172,12 +175,14 @@ const UserDataInterface = memo(({ user }) => {
                   ""
                 )}{" "}
               </span>
-              <span
-                v-else=""
-                className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"
-              >
-                2
-              </span>
+              {newMessage && (
+                <span
+                  v-else=""
+                  className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"
+                >
+                  1
+                </span>
+              )}
             </div>
           </div>
         </div>
