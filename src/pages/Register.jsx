@@ -8,14 +8,8 @@ import { getDataStorage } from "../data/utilsFuns";
 import { login, register } from "../services/AuthApi";
 
 const Register = () => {
-  const {
-    setUserIsAuthenticated,
-    setSettings,
-    isLoading,
-    setLoading,
-    setUserData,
-    setAlert,
-  } = ChatContext();
+  const { setUserIsAuthenticated, setSettings, setUserData, setAlert } =
+    ChatContext();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -24,6 +18,8 @@ const Register = () => {
     password: "",
     confpassword: "",
   });
+  const [isLoading, setLoading] = useState(false);
+
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
     setFormData((state) => ({ ...state, [name]: value }));
