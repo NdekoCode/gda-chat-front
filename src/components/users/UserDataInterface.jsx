@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../../data/AppContext";
 import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
+import UserTyping from "./UserTyping";
 
 const UserDataInterface = memo(({ user }) => {
   const {
@@ -18,6 +19,11 @@ const UserDataInterface = memo(({ user }) => {
     userId: user._id,
     content: {},
   });
+  const [userTyping, setUserTyping] = useState({
+    userId: null,
+    isTyping: false,
+    userType: {},
+  });
   const addLastMessage = (msg) => {
     const user =
       lastMessage.userId === msg.receiver || lastMessage.userId === msg.sender;
@@ -25,6 +31,30 @@ const UserDataInterface = memo(({ user }) => {
       setLastMessage((state) => ({ ...state, content: msg }));
     }
   };
+
+  socket.on("typing", (userType) => {
+    console.log(
+      "typing ",
+      userType.writeTo,
+      user.firstName,
+      user._id,
+      userType.isWriting.userId
+    );
+    setUserTyping((state) => ({
+      ...state,
+      userId: userType.isWriting.userId,
+      isTyping: true,
+      userType: userType.writeTo,
+    }));
+    setTimeout(
+      () =>
+        setUserTyping((state) => ({
+          ...state,
+          isTyping: false,
+        })),
+      2500
+    );
+  });
   socket.on("received_message", (msg) => {
     addLastMessage(msg);
   });
@@ -59,7 +89,6 @@ const UserDataInterface = memo(({ user }) => {
     setChatUser(chatMessages);
     addLastMessage(chatMessages[chatMessages.length - 1]);
   }, [setChatUser]);
-  console.log(chatUser);
   return (
     <li
       className={`flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200 ${
@@ -132,9 +161,16 @@ const UserDataInterface = memo(({ user }) => {
             </div>
             <div className="flex justify-between text-sm leading-none truncate">
               <span className="text-gray-500">
-                {!objectIsEmpty(lastMessage.content)
-                  ? lastMessage.content.message
-                  : ""}{" "}
+                {userTyping.isTyping && userTyping.userId === user._id ? (
+                  <UserTyping
+                    user={userTyping.userType}
+                    isTyping={userTyping.isTyping}
+                  />
+                ) : !objectIsEmpty(lastMessage.content) ? (
+                  lastMessage.content.message
+                ) : (
+                  ""
+                )}{" "}
               </span>
               <span
                 v-else=""

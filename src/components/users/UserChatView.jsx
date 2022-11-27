@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
+import ChatContext from "../../data/AppContext";
 import { objectIsEmpty } from "../../data/utilsFuns";
 import StickyButton from "../StickyButton";
+import UserTyping from "./UserTyping";
 const UserChatView = ({ user }) => {
+  const { socket, selectedUser } = ChatContext();
+  const [userTyping, setUserTyping] = useState({
+    isTyping: false,
+    userType: {},
+  });
+
+  socket.on("typing", (user) => {
+    setUserTyping({ isTyping: true, userType: user });
+  });
   return (
     !objectIsEmpty(user) && (
       <div className="z-20 flex flex-grow-0 flex-shrink-0 w-full pr-3 bg-white border-b">
@@ -22,7 +33,11 @@ const UserChatView = ({ user }) => {
             {user.username}
           </div>
           <div className="overflow-hidden text-sm font-medium leading-tight text-gray-600 whitespace-no-wrap">
-            Online
+            {userTyping.isTyping && selectedUser.userId === user._id ? (
+              <UserTyping user={userTyping.userType} />
+            ) : (
+              "Online"
+            )}
           </div>
         </div>
         <div className="flex items-center">
