@@ -4,10 +4,10 @@ import ChatSidebar from "../components/users/ChatSidebar";
 import ChatUserInterface from "../components/users/ChatUserInterface";
 import NoSelectedUserMessage from "../components/users/NoSelectedUserMessage";
 import ChatContext from "../data/AppContext";
-import { objectIsEmpty } from "../data/utilsFuns";
+import { arrayIsEmpty } from "../data/utilsFuns";
 
 const Chat = () => {
-  const { selectedUser } = ChatContext();
+  const { selectedUser, activeChatId } = ChatContext();
   return (
     <section
       className="h-screen overflow-hidden flex items-center justify-center"
@@ -18,7 +18,7 @@ const Chat = () => {
         <ChatUserInterface />
         {/* center */}
 
-        {!objectIsEmpty(selectedUser) ? (
+        {!arrayIsEmpty(selectedUser.messages) ? (
           <ChatContainer />
         ) : (
           <NoSelectedUserMessage />

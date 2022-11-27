@@ -46,8 +46,11 @@ function App() {
     userIsAuthenticated,
   } = ChatContext();
   useEffect(() => {
-    socket.on("connect", (socket) => {
-      console.log(socket, " User connected ");
+    socket.on("connect", () => {
+      socket.emit("join_user", {
+        userConnectId: userData.userId,
+        userInterlocutorId: null,
+      });
     });
     // On verifie si l'utilisateur est
     setUserIsAuthenticated(verifyUserHasAuthenticated());
@@ -65,10 +68,10 @@ function App() {
           setMessages
         );
         setLoading(loading);
-        console.log(data);
       })();
     }
   }, [setUserIsAuthenticated, userIsAuthenticated]);
+
   return (
     <>
       <Routes>

@@ -18,11 +18,11 @@ const ChatUserInterface = () => {
         setUsers,
         settings.token
       );
-      if (!arrayIsEmpty(data)) {
+      /*  if (!arrayIsEmpty(data)) {
         for (let d of data) {
-          socket.to(d._id).emit("user_is_connected", userData);
+          socket.emit("user_is_connected", userData);
         }
-      }
+      } */
       setLoading(loading);
     })();
   }, [settings.token, setLoading]);
@@ -41,12 +41,7 @@ const ChatUserInterface = () => {
         <ul className="flex flex-row items-center px-2 list-none select-none">
           <li className="flex-auto px-1 mx-1 -mb-px text-center rounded-t-lg cursor-pointer last:mr-0 hover:bg-gray-200">
             <a className="flex items-center justify-center py-2 text-xs font-semibold leading-normal tracking-wide border-b-2 border-blue-500">
-              All
-            </a>
-          </li>
-          <li className="flex-auto px-1 mx-1 -mb-px text-center rounded-t-lg cursor-pointer last:mr-0 hover:bg-gray-200">
-            <a className="flex items-center justify-center block py-2 text-xs font-semibold leading-normal tracking-wide border-b-2 border-transparent">
-              Groups
+              Contact
             </a>
           </li>
         </ul>
@@ -54,10 +49,9 @@ const ChatUserInterface = () => {
       <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter  scrollbar-thumb-rounded scrollbar-thumb-gray">
         <ul className="flex flex-col inline-block w-full h-screen pb-32 px-2 select-none">
           {!arrayIsEmpty(users)
-            ? users.map((user) => {
-                if (user._id !== userData.userId)
-                  return <UserDataInterface key={user._id} user={user} />;
-              })
+            ? users.map((user) => (
+                <UserDataInterface key={user._id} user={user} />
+              ))
             : isLoading && <UserSkeleton />}
 
           <li

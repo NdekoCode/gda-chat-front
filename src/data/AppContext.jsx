@@ -32,7 +32,10 @@ export const ContextProvider = memo(({ children }) => {
   });
 
   const [userData, setUserData] = useState(getDataStorage("userData"));
-  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState({
+    user: "",
+    messages: "",
+  });
   const [contactUsers, setContactUsers] = useState([]);
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [isLoading, setLoading] = useState(true);
@@ -42,6 +45,7 @@ export const ContextProvider = memo(({ children }) => {
   const [alert, setAlert] = useState([]);
   const [chatUser, setChatUser] = useState([]);
   const [socket, setSocket] = useState({});
+  const [activeChatId, setActiveChatId] = useState(null);
 
   const [stateSticky, setStateVisible] = useState({
     visible: false,
@@ -79,6 +83,8 @@ export const ContextProvider = memo(({ children }) => {
     socket,
     setSocket,
     setContactUsers,
+    activeChatId,
+    setActiveChatId,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
