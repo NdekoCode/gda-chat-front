@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import ChatContext from "../../data/AppContext";
+import {
+  arrayIsEmpty,
+  findAndSetData,
+  getDataStorage,
+  setDataStorage,
+} from "../../data/utilsFuns";
 import StickyNavbar from "../StickyNavbar";
+import UserSkeleton from "../UserSkeleton";
 import SearchFormInterface from "./SearchFormInterface";
+import UserDataInterface from "./UserDataInterface";
 
-const AddLoadUsers = () => {
+const AddLoadUsers = ({ showUsers }) => {
+  const { settings, selectedUser } = ChatContext();
+  const storageUser = getDataStorage("users");
+  const [users, setUsers] = useState(storageUser ? storageUser : []);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    (async () => {
+      if (arrayIsEmpty(users)) {
+        const [data, loading] = await findAndSetData(
+          settings.main_url + "/auth/users",
+          setUsers
+        );
+        setIsLoading(loading);
+        setDataStorage("users", data);
+      } else {
+        setIsLoading(false);
+      }
+    })();
+  }, [isLoading, setUsers]);
   return (
-    <div className="fixed bg-slate-800 min-h-screen inset-0 flex flex-col justify-center">
+    <div className="fixed bg-slate-900/60 min-h-screen fadeIn inset-0 flex flex-col justify-center">
       <div
         className="relative flex flex-col hidden h-full bg-white border-r border-gray-300 shadow-xl md:block transform transition-all duration-500 ease-in-out"
         style={{ width: "24rem" }}
@@ -28,7 +55,11 @@ const AddLoadUsers = () => {
           <ul className="flex flex-col inline-block w-full h-screen pb-32 px-2 select-none">
             {!arrayIsEmpty(users)
               ? users.map((user) => (
-                  <UserDataInterface key={user._id} user={user} />
+                  <UserDataInterface
+                    key={user._id}
+                    user={user}
+                    showUsers={showUsers}
+                  />
                 ))
               : isLoading && <UserSkeleton />}
 
@@ -136,8 +167,11 @@ const AddLoadUsers = () => {
             </li>
           </ul>
         </div>
-        <div className="fixed top-0 left-0 z-40 mt-6 ml-4">
-          <button className="animate-ping shadow-md flex items-center justify-center bg-red-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-lg">
+        <div className="fixed top-0 right-0 z-40 mt-6 ml-4">
+          <button
+            onClick={showUsers}
+            className="animate-bounce shadow-md flex items-center justify-center bg-red-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-lg"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={24}

@@ -15,7 +15,7 @@ import AuthenticatedRoutes from "./components/auth/AuthenticatedRoutes";
 import RedirectAuthenticated from "./components/auth/RedirectAuthenticated";
 import ToastMessages from "./components/ToastMessages";
 import ChatContext from "./data/AppContext";
-import { arrayIsEmpty, findAndSetData } from "./data/utilsFuns";
+import { arrayIsEmpty, findAndSetData, removeItem } from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
 const socket = IO.connect("http://localhost:3500");
@@ -29,6 +29,7 @@ function App() {
     socket.on("disconnect", () => {
       setIsSocketConnect(false);
     });
+    removeItem("users");
     return () => {
       socket.off("connect");
       socket.off("disconnect");

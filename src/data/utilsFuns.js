@@ -92,7 +92,7 @@ export function objectIsEmpty(obj) {
 }
 
 export function arrayIsEmpty(arr) {
-  return typeof arr !== "undefined" && arr.length < 1;
+  return typeof arr !== "undefined" && arr !== null && arr.length < 1;
 }
 export function formatTime(dateTime) {
   return new Date(dateTime).toLocaleTimeString().substring(0, 5);

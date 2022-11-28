@@ -3,7 +3,7 @@ import ChatContext from "../../data/AppContext";
 import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
 import UserTyping from "./UserTyping";
 
-const UserDataInterface = memo(({ user }) => {
+const UserDataInterface = memo(({ user, showUsers = null }) => {
   const {
     messages,
     selectedUser,
@@ -73,6 +73,9 @@ const UserDataInterface = memo(({ user }) => {
     setNewMessage((d) => ({ ...d, state: false }));
     setSelectedUser((d) => ({ ...d, user: user }));
     setActiveChatId(user._id);
+    if (showUsers !== null) {
+      showUsers(false);
+    }
     if (socket !== null && socket !== undefined) {
       socket.emit("join_user", {
         userConnectId: userData.userId,
