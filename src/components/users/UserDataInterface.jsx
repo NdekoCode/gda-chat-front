@@ -18,17 +18,20 @@ const UserDataInterface = memo(({ user }) => {
     userId: user._id,
     content: {},
   });
-  const [newMessage, setNewMessage] = useState(false);
+  const [newMessage, setNewMessage] = useState({ state: false, userId: null });
   const [userTyping, setUserTyping] = useState({
     userId: null,
     isTyping: false,
     userType: {},
   });
   const addLastMessage = (msg) => {
-    const user =
-      lastMessage.userId === msg.receiver || lastMessage.userId === msg.sender;
-    if (user) {
-      setLastMessage((state) => ({ ...state, content: msg }));
+    if (msg) {
+      const user =
+        lastMessage.userId === msg.receiver ||
+        lastMessage.userId === msg.sender;
+      if (user) {
+        setLastMessage((state) => ({ ...state, content: msg }));
+      }
     }
   };
 
@@ -56,7 +59,7 @@ const UserDataInterface = memo(({ user }) => {
     );
   });
   socket.on("received_message", (msg) => {
-    setNewMessage(true);
+    setNewMessage((d) => ({ ...d, state: true, userId: msg.receiver }));
     addLastMessage(msg);
   });
   const { firstName, lastName, image, username, _id } = user;
@@ -67,7 +70,7 @@ const UserDataInterface = memo(({ user }) => {
       (msg.receiver === _id && msg.sender === userData.userId)
   );
   const handleClick = () => {
-    setNewMessage(false);
+    setNewMessage((d) => ({ ...d, state: false }));
     setSelectedUser((d) => ({ ...d, user: user }));
     setActiveChatId(user._id);
     if (socket !== null && socket !== undefined) {
@@ -87,7 +90,7 @@ const UserDataInterface = memo(({ user }) => {
   };
 
   useEffect(() => {
-    setNewMessage(false);
+    setNewMessage((d) => ({ ...d, state: false }));
     // setUserMessages(chatMessages);
     setChatUser(chatMessages);
     addLastMessage(chatMessages[chatMessages.length - 1]);
@@ -175,7 +178,7 @@ const UserDataInterface = memo(({ user }) => {
                   ""
                 )}{" "}
               </span>
-              {newMessage && (
+              {newMessage.state && newMessage.userId === user._id && (
                 <span
                   v-else=""
                   className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"
