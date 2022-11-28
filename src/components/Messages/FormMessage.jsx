@@ -14,7 +14,10 @@ const FormMessage = () => {
   } = ChatContext();
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
-    socket.emit("user_writing", userData);
+    socket.emit("user_writing", {
+      isWriting: userData,
+      toSend: selectedUser.user,
+    });
     const value = evt.target.value;
     setMsg(value);
   };
