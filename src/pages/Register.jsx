@@ -31,6 +31,7 @@ const Register = () => {
     (async () => {
       const [data, result] = await register(loginData, setAlert);
       try {
+        console.log(result);
         if (result) {
           const [alert, resultLogin] = await login(data, setAlert);
           if (resultLogin) {
@@ -45,8 +46,10 @@ const Register = () => {
             return setUserIsAuthenticated(result);
           }
 
-          return toast.error(data.message);
+          return toast.error(alert.message);
         }
+
+        return toast.error(data.message);
       } catch (error) {
         return toast.error(error.message);
       }

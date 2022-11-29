@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 
-const SearchFormInterface = () => {
+const SearchFormInterface = ({ users, setUsers }) => {
+  const [search, setSearch] = useState("");
+  const handleSearch = (evt) => {
+    const value = evt.currentTarget.value;
+    setSearch(value);
+  };
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const newUsers = users.filter(
+      (user) =>
+        user.username.includes(search) ||
+        user.firstName.includes(search) ||
+        user.lastName.includes(search)
+    );
+    setUsers(newUsers);
+  };
   return (
-    <form className="relative flex items-center w-full pl-2 overflow-hidden text-gray-600 focus-within:text-gray-400">
+    <form
+      className="relative flex items-center w-full pl-2 overflow-hidden text-gray-600 focus-within:text-gray-400"
+      onSubmit={handleSubmit}
+    >
       <span className="absolute inset-y-0 left-0 flex items-center pl-4">
         <button
+          onClick={handleSubmit}
           type="submit"
           className="p-1 focus:outline-none focus:shadow-none"
         >
@@ -25,6 +44,8 @@ const SearchFormInterface = () => {
       <input
         type="search"
         name="q"
+        value={search}
+        onChange={handleSearch}
         className="w-full py-2 pl-12 text-sm text-white bg-gray-200 border border-transparent appearance-none rounded-tg focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue"
         style={{ borderRadius: 25 }}
         placeholder="Search..."

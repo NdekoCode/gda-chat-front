@@ -34,7 +34,7 @@ export const ContextProvider = memo(({ children }) => {
   const [userData, setUserData] = useState(getDataStorage("userData"));
   const [selectedUser, setSelectedUser] = useState({
     user: "",
-    messages: "",
+    messages: [],
   });
   const [contactUsers, setContactUsers] = useState([]);
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
@@ -43,7 +43,6 @@ export const ContextProvider = memo(({ children }) => {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [alert, setAlert] = useState([]);
-  const [chatUser, setChatUser] = useState([]);
   const [socket, setSocket] = useState({});
   const [activeChatId, setActiveChatId] = useState(null);
 
@@ -53,6 +52,24 @@ export const ContextProvider = memo(({ children }) => {
   });
   const handleVisible = () => {
     setStateVisible((d) => ({ ...d, visible: !stateSticky.visible }));
+  };
+  const addNewContact = (newContact) => {
+    for (let contact of contactUsers) {
+      if (
+        (contact._id !== newContact._id ||
+          contact.email !== newContact.email) &&
+        contact._id !== userData.userId
+      ) {
+        setContactUsers((state) => [newContact, ...state]);
+        console.log(
+          "New user ",
+          newContact.firstName,
+          newContact.lastName,
+          newContact.email
+        );
+        console.log(contact._id, newContact._id, contact.email);
+      }
+    }
   };
   /** @type {AppChatContext} */
   const value = {
@@ -75,11 +92,10 @@ export const ContextProvider = memo(({ children }) => {
     handleVisible,
     alert,
     setAlert,
-    chatUser,
-    setChatUser,
     selectedUser,
     setSelectedUser,
     contactUsers,
+    addNewContact,
     socket,
     setSocket,
     setContactUsers,

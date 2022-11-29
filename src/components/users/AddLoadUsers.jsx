@@ -39,7 +39,7 @@ const AddLoadUsers = ({ showUsers }) => {
         <div className="flex justify-between px-3 pt-1 text-white">
           <div className="flex items-center w-full py-2">
             <StickyNavbar />
-            <SearchFormInterface />
+            <SearchFormInterface users={users} setUsers={setUsers} />
           </div>
         </div>
         <div className="border-b shadow-bot">
@@ -167,10 +167,10 @@ const AddLoadUsers = ({ showUsers }) => {
             </li>
           </ul>
         </div>
-        <div className="fixed top-0 right-0 z-40 mt-6 ml-4">
+        <div className="fixed -top-3 -right-20 z-50 mt-6 ml-4" title="Close">
           <button
             onClick={showUsers}
-            className="animate-bounce shadow-md flex items-center justify-center bg-red-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-lg"
+            className="animate-pulse hover:animate-none shadow-md flex items-center justify-center bg-red-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-lg"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

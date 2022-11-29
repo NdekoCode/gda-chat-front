@@ -3,15 +3,8 @@ import { toast } from "react-toastify";
 import ChatContext from "../../data/AppContext";
 
 const FormMessage = () => {
-  const {
-    settings,
-    setLoading,
-    selectedUser,
-    setSelectedUser,
-    userData,
-    setActiveChatId,
-    socket,
-  } = ChatContext();
+  const { selectedUser, setSelectedUser, userData, setActiveChatId, socket } =
+    ChatContext();
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
     socket.emit("user_writing", {
@@ -23,51 +16,22 @@ const FormMessage = () => {
   };
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    const messages = selectedUser.messages;
     setMsg("");
     const dataSend = {
       sender: userData.userId,
       receiver: selectedUser.user._id,
       message: msg,
     };
-    socket.emit("send_message", dataSend);
-    messages.push(dataSend);
+    setSelectedUser((d) => ({
+      ...d,
+      messages: [...selectedUser.messages, dataSend],
+    }));
+    const userSender = { ...userData };
+    userSender._id = userSender.userId;
+    delete userSender.userId;
+    socket.emit("send_message", { dataSend, userSender });
     toast.success("Message envoyer");
     setActiveChatId(selectedUser.user._id);
-    setSelectedUser((d) => ({ ...d, messages }));
-    /* (async () => {
-      const dataSend = {
-        sender: userData.userId,
-        receiver: selectedUser._id,
-        message: msg,
-      };
-
-      let loading = true;
-      const response = await fetch(
-        settings.main_url + "/chat/send/" + selectedUser._id,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: settings.token,
-          },
-          body: JSON.stringify(dataSend),
-        }
-      );
-      const responseData = await response.json();
-      socket.emit("send_message", dataSend);
-      if (response.ok) {
-        loading = false;
-        toast.success(responseData.alert.message);
-        setChatUser((d) => [...d, dataSend]);
-        console.log(responseData);
-      } else {
-        toast.error(responseData.alert.message);
-        loading = false;
-      }
-      setLoading(loading);
-      console.log(responseData);
-    })(); */
   };
   return (
     <form

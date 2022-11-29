@@ -30,10 +30,10 @@ const UserChatView = ({ user }) => {
         </div>
         <div className="flex flex-col justify-center flex-1 overflow-hidden cursor-pointer">
           <div className="overflow-hidden text-base font-medium leading-tight text-gray-600 whitespace-no-wrap">
-            {user.username}
+            {`${user.firstName} ${user.lastName}`}
           </div>
           <div className="overflow-hidden text-sm font-medium leading-tight text-gray-600 whitespace-no-wrap">
-            {userTyping.isTyping && selectedUser.userId === user._id ? (
+            {userTyping.isTyping && userTyping.userId === user._id ? (
               <UserTyping user={userTyping.userType} />
             ) : (
               "Online"

@@ -1,5 +1,6 @@
 import React from "react";
 import imageChat from "../../assets/img/WhatsappImage.png";
+import { arrayIsEmpty } from "../../data/utilsFuns";
 import DateMessage from "./DateMessage";
 import FormMessage from "./FormMessage";
 import Message from "./Message";
@@ -15,15 +16,20 @@ const MessagesContainer = ({ messages, userData }) => {
           <div className="self-center px-2 py-1 mx-0 my-1 text-sm  text-gray-700 bg-white border border-gray-200 rounded-full shadow rounded-tg">
             Channel was created
           </div>
-          <DateMessage date=" May 6" />
-          {messages.map(({ sender, message, createdAt }, index) => (
-            <Message
-              key={index}
-              sender={sender === userData.userId}
-              date={createdAt}
-              msg={message}
-            />
-          ))}
+          {!arrayIsEmpty(messages) && (
+            <>
+              <DateMessage date=" May 6" />
+              {messages.map(({ sender, message, createdAt }, index) => (
+                <Message
+                  key={index}
+                  sender={sender === userData.userId}
+                  date={createdAt}
+                  msg={message}
+                />
+              ))}
+            </>
+          )}
+          {}
           {/* <Message sender={false} msg="Nice to meet you arick" /> */}
           {/* <Message sender={true} msg="HI my name is arick" /> */}
           <div className="hidden" id="bottom"></div>

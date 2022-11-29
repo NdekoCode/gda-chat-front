@@ -1,29 +1,16 @@
-import React, { useEffect, useState } from "react";
-import ChatContext from "../../data/AppContext";
-import { arrayIsEmpty, findAndSetData } from "../../data/utilsFuns";
+import React, { memo, useState } from "react";
+import { arrayIsEmpty } from "../../data/utilsFuns";
 import StickyNavbar from "../StickyNavbar";
 import AddLoadUsers from "./AddLoadUsers";
 import SearchFormInterface from "./SearchFormInterface";
 import UserDataInterface from "./UserDataInterface";
 import UserSkeleton from "./UserSkeleton";
 
-const ChatUserInterface = () => {
-  const { users, settings, isLoading, setUsers, setLoading } = ChatContext();
+const ChatUserInterface = memo(({ contactUsers, isLoading }) => {
   const [showUser, setShowUser] = useState(false);
   const showLoadUser = () => {
     setShowUser((state) => !state);
   };
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const [data, loading] = await findAndSetData(
-        settings.main_url + "/auth/contacts",
-        setUsers,
-        settings.token
-      );
-      setLoading(loading);
-    })();
-  }, [settings.token, setLoading]);
   return (
     <>
       <div
@@ -40,15 +27,15 @@ const ChatUserInterface = () => {
           <ul className="flex flex-row items-center px-2 list-none select-none">
             <li className="flex-auto px-1 mx-1 -mb-px text-center rounded-t-lg cursor-pointer last:mr-0 hover:bg-gray-200">
               <a className="flex items-center justify-center py-2 text-xs font-semibold leading-normal tracking-wide border-b-2 border-blue-500">
-                Contact
+                Messages
               </a>
             </li>
           </ul>
         </div>
         <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter  scrollbar-thumb-rounded scrollbar-thumb-gray">
           <ul className="flex flex-col inline-block w-full h-screen pb-32 px-2 select-none">
-            {!arrayIsEmpty(users)
-              ? users.map((user) => (
+            {!arrayIsEmpty(contactUsers)
+              ? contactUsers.map((user) => (
                   <UserDataInterface key={user._id} user={user} />
                 ))
               : isLoading && <UserSkeleton />}
@@ -185,6 +172,6 @@ const ChatUserInterface = () => {
       {showUser && <AddLoadUsers showUsers={showLoadUser} />}
     </>
   );
-};
+});
 
 export default ChatUserInterface;
