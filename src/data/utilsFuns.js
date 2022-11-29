@@ -92,9 +92,9 @@ export function objectIsEmpty(obj) {
 }
 
 export function arrayIsEmpty(arr) {
-  return typeof arr !== "undefined" && arr.length < 1;
+  return typeof arr !== "undefined" && arr !== null && arr.length < 1;
 }
 export function formatTime(dateTime) {
   return new Date(dateTime).toLocaleTimeString().substring(0, 5);
 }
-export const API_URL = "http://localhost:3500/api/v1";
+export const API_URL = "https://chat-gda.onrender.com/api/v1";

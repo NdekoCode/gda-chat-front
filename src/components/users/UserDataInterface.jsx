@@ -3,51 +3,52 @@ import ChatContext from "../../data/AppContext";
 import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
 import UserTyping from "./UserTyping";
 
-const UserDataInterface = memo(({ user }) => {
+const UserDataInterface = memo(({ user, showUsers = null }) => {
   const {
     messages,
     selectedUser,
     setSelectedUser,
     userData,
-    setChatUser,
     socket,
-    setActiveChatId,
+    contactUsers,
+    addNewContact,
   } = ChatContext();
   // const [userMessages, setUserMessages] = useState([]);
-  const [lastMessage, setLastMessage] = useState({
-    userId: user._id,
-    content: {},
-  });
-  const [newMessage, setNewMessage] = useState({ state: false, userId: null });
+  const [lastMessage, setLastMessage] = useState({});
+  const [userConnected, setUserConnected] = useState(false);
+  const [newMessage, setNewMessage] = useState(false);
   const [userTyping, setUserTyping] = useState({
     userId: null,
     isTyping: false,
     userType: {},
   });
+  const { firstName, lastName, image, username, _id } = user;
+  const fullName = `${firstName} ${lastName}`;
+  const chatMessages = messages.filter(
+    (msg) =>
+      (msg.sender === _id && msg.receiver === userData.userId) ||
+      (msg.receiver === _id && msg.sender === userData.userId)
+  );
   const addLastMessage = (msg) => {
     if (msg) {
-      const user =
-        lastMessage.userId === msg.receiver ||
-        lastMessage.userId === msg.sender;
-      if (user) {
-        setLastMessage((state) => ({ ...state, content: msg }));
+      const userTest = user._id === msg.receiver || user._id === msg.sender;
+      if (userTest) {
+        setLastMessage(msg);
       }
     }
   };
 
+  socket.on("new_user", (userAuth) => {
+    if (userAuth.email === user.email && userAuth.email !== userData.email) {
+      setUserConnected(true);
+    }
+  });
   socket.on("typing", (userType) => {
-    console.log(
-      "typing ",
-      userType.writeTo,
-      user.firstName,
-      user._id,
-      userType.isWriting.userId
-    );
     setUserTyping((state) => ({
       ...state,
       userId: userType.isWriting.userId,
       isTyping: true,
-      userType: userType.writeTo,
+      userType: userType.isWriting,
     }));
     setTimeout(
       () =>
@@ -58,43 +59,45 @@ const UserDataInterface = memo(({ user }) => {
       2500
     );
   });
-  socket.on("received_message", (msg) => {
-    setNewMessage((d) => ({ ...d, state: true, userId: msg.receiver }));
-    addLastMessage(msg);
-  });
-  const { firstName, lastName, image, username, _id } = user;
-  const fullName = `${firstName} ${lastName}`;
-  const chatMessages = messages.filter(
-    (msg) =>
-      (msg.sender === _id && msg.receiver === userData.userId) ||
-      (msg.receiver === _id && msg.sender === userData.userId)
-  );
-  const handleClick = () => {
-    setNewMessage((d) => ({ ...d, state: false }));
-    setSelectedUser((d) => ({ ...d, user: user }));
-    setActiveChatId(user._id);
-    if (socket !== null && socket !== undefined) {
-      socket.emit("join_user", {
-        userConnectId: userData.userId,
-        userInterlocutorId: user._id,
-      });
-
-      socket.on("load_messages", (messagesChat) => {
-        const chatMessages = JSON.parse(messagesChat);
-        if (!arrayIsEmpty(chatMessages)) {
-          setSelectedUser((d) => ({ ...d, messages: chatMessages }));
-          addLastMessage(chatMessages[chatMessages.length - 1]);
-        }
-      });
+  socket.on("received_message", (dataReceived) => {
+    if (
+      dataReceived.dataSend.receiver === userData.userId &&
+      dataReceived.dataSend.sender !== userData.userId
+    ) {
+      setNewMessage(true);
     }
+    addLastMessage(dataReceived.dataSend);
+  });
+  const handleClick = () => {
+    setNewMessage(false);
+    const userExist = contactUsers.some((userF) => userF._id === user._id);
+    if (!userExist) {
+      console.log("User don't exists in my contact", user);
+      addNewContact(user);
+      setSelectedUser((d) => ({ ...d, user: user, messages: [] }));
+    } else {
+      setSelectedUser((d) => ({ ...d, user: user }));
+    }
+    if (showUsers !== null) {
+      showUsers(false);
+    }
+    socket.emit("join_user", {
+      userConnectId: userData.userId,
+      userInterlocutorId: user._id,
+      userInterlocutor: user,
+    });
+
+    socket.on("load_messages", (messagesChat) => {
+      const chatMessages = JSON.parse(messagesChat);
+      if (!arrayIsEmpty(chatMessages)) {
+        addLastMessage(chatMessages[chatMessages.length - 1]);
+      }
+    });
   };
 
   useEffect(() => {
-    setNewMessage((d) => ({ ...d, state: false }));
-    // setUserMessages(chatMessages);
-    setChatUser(chatMessages);
     addLastMessage(chatMessages[chatMessages.length - 1]);
-  }, [setChatUser]);
+  }, [lastMessage]);
   return (
     <li
       className={`flex flex-no-wrap items-center pr-3 text-black rounded-lg cursor-pointer mt-200 py-65 hover:bg-gray-200 ${
@@ -119,15 +122,18 @@ const UserDataInterface = memo(({ user }) => {
                 {username[0].toUpperCase()}
               </div>
             )}
-            <div
-              className="absolute bottom-0 right-0 flex items-center justify-center bg-white rounded-full"
-              style={{ width: "0.80rem", height: "0.80rem" }}
-            >
+
+            {userConnected && (
               <div
-                className="bg-green-500 rounded-full"
-                style={{ width: "0.6rem", height: "0.6rem" }}
-              />
-            </div>
+                className="absolute bottom-0 right-0 flex items-center justify-center bg-white rounded-full"
+                style={{ width: "0.80rem", height: "0.80rem" }}
+              >
+                <div
+                  className="bg-green-500 rounded-full"
+                  style={{ width: "0.6rem", height: "0.6rem" }}
+                />
+              </div>
+            )}
           </div>
           <div className="items-center flex-1 min-w-0">
             <div className="flex justify-between mb-1">
@@ -159,8 +165,8 @@ const UserDataInterface = memo(({ user }) => {
                   />
                 </svg>
                 <span className="ml-1 text-xs font-medium text-gray-600">
-                  {!objectIsEmpty(lastMessage.content)
-                    ? formatTime(lastMessage.content.createdAt)
+                  {!objectIsEmpty(lastMessage)
+                    ? formatTime(lastMessage.createdAt)
                     : ""}
                 </span>
               </div>
@@ -172,13 +178,14 @@ const UserDataInterface = memo(({ user }) => {
                     user={userTyping.userType}
                     isTyping={userTyping.isTyping}
                   />
-                ) : !objectIsEmpty(lastMessage.content) ? (
-                  lastMessage.content.message
+                ) : !objectIsEmpty(lastMessage) ? (
+                  lastMessage.message
                 ) : (
                   ""
                 )}{" "}
               </span>
-              {newMessage.state && newMessage.userId === user._id && (
+              {JSON.stringify(newMessage)}
+              {newMessage && (
                 <span
                   v-else=""
                   className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"

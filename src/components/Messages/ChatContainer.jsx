@@ -1,25 +1,29 @@
-import React from "react";
+import React, { memo } from "react";
 import ChatContext from "../../data/AppContext";
 import UserChatView from "../users/UserChatView";
 import MessagesContainer from "./MessagesContainer";
 
-const ChatContainer = () => {
-  const { userData, selectedUser, setSelectedUser, setActiveChatId, socket } =
+const ChatContainer = memo(() => {
+  const { userData, selectedUser, setSelectedUser, socket, contactUsers } =
     ChatContext();
-  console.log(selectedUser.messages);
   const { messages } = selectedUser;
 
   socket.on("received_message", (dataReceive) => {
-    setActiveChatId(dataReceive.receiver);
-    console.log("Message received", dataReceive);
+    console.log("New message detected ", dataReceive.dataSend);
     const msg = selectedUser.messages.filter(
       (d) =>
-        d.sender !== dataReceive.sender ||
-        d.message !== dataReceive.message ||
-        d.createdAt !== dataReceive.createdAt
+        d.receiver !== dataReceive.userSender.receiver ||
+        d.message !== dataReceive.dataSend.message ||
+        d.createdAt !== dataReceive.dataSend.createdAt
     );
-    msg.push(dataReceive);
-    setSelectedUser((d) => ({ ...d, messages: msg }));
+
+    msg.push(dataReceive.dataSend);
+    setSelectedUser((d) => ({
+      ...d,
+      messages: msg,
+    }));
+    // msg.push(dataReceive.dataSend);
+    // setSelectedUser((d) => ({ ...d, messages: msg }));
   });
   return (
     <div className="relative flex flex-col flex-1">
@@ -27,6 +31,6 @@ const ChatContainer = () => {
       <MessagesContainer messages={messages} userData={userData} />
     </div>
   );
-};
+});
 
 export default ChatContainer;

@@ -8,32 +8,21 @@
 // TODO: #17  - User login
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import IO from "socket.io-client";
 import AuthenticatedRoutes from "./components/auth/AuthenticatedRoutes";
 import RedirectAuthenticated from "./components/auth/RedirectAuthenticated";
 import ToastMessages from "./components/ToastMessages";
 import ChatContext from "./data/AppContext";
-import { arrayIsEmpty, findAndSetData } from "./data/utilsFuns";
+import { arrayIsEmpty, findAndSetData, removeItem } from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
 const socket = IO.connect("http://localhost:3500");
 function App() {
   const [isSocketConnect, setIsSocketConnect] = useState(socket.connected);
   const [lastConnect, setLastConnect] = useState(null);
-  useEffect(() => {
-    socket.on("connect", () => {
-      setIsSocketConnect(true);
-    });
-    socket.on("disconnect", () => {
-      setIsSocketConnect(false);
-    });
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-    };
-  }, []);
+
   const {
     settings,
     setMessages,
@@ -44,14 +33,11 @@ function App() {
     setLoading,
     setUserIsAuthenticated,
     userIsAuthenticated,
+    addNewContact,
+    setSelectedUser,
+    contactUsers,
   } = ChatContext();
   useEffect(() => {
-    socket.on("connect", () => {
-      socket.emit("join_user", {
-        userConnectId: userData.userId,
-        userInterlocutorId: null,
-      });
-    });
     // On verifie si l'utilisateur est
     setUserIsAuthenticated(verifyUserHasAuthenticated());
     if (!arrayIsEmpty(alert)) {
@@ -61,7 +47,23 @@ function App() {
     console.log("Not connected", userIsAuthenticated);
     if (userIsAuthenticated) {
       setSocket(socket);
+
+      socket.on("connect", () => {
+        setIsSocketConnect(true);
+        socket.emit("join_user", {
+          userConnectId: userData.userId,
+          userInterlocutorId: null,
+        });
+      });
+      socket.on("disconnect", () => {
+        setIsSocketConnect(false);
+      });
+      removeItem("users");
       socket.emit("user_connected", userData);
+      socket.on("new_user", (user) => {
+        toast.info(user.firstName + " est connecté");
+      });
+
       (async () => {
         const [data, loading] = await findAndSetData(
           settings.main_url + "/chat",
@@ -70,6 +72,14 @@ function App() {
         setLoading(loading);
       })();
     }
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("user_connected");
+      socket.off("new_user");
+      socket.off("user_contact");
+    };
   }, [setUserIsAuthenticated, userIsAuthenticated]);
 
   return (
