@@ -18,7 +18,7 @@ import ChatContext from "./data/AppContext";
 import { arrayIsEmpty, findAndSetData, removeItem } from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
-const socket = IO.connect("http://localhost:3500");
+const socket = IO.connect("https://chat-gda.onrender.com");
 function App() {
   const [isSocketConnect, setIsSocketConnect] = useState(socket.connected);
   const [lastConnect, setLastConnect] = useState(null);
