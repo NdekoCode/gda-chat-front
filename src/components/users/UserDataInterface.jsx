@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../../data/AppContext";
-import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
+import { formatTime, objectIsEmpty } from "../../data/utilsFuns";
 import UserTyping from "./UserTyping";
 
 const UserDataInterface = memo(({ user, showUsers = null }) => {
@@ -12,6 +12,8 @@ const UserDataInterface = memo(({ user, showUsers = null }) => {
     socket,
     contactUsers,
     addNewContact,
+    activeToggleBlock,
+    showComponentResponsive,
   } = ChatContext();
   // const [userMessages, setUserMessages] = useState([]);
   const [lastMessage, setLastMessage] = useState({});
@@ -69,6 +71,9 @@ const UserDataInterface = memo(({ user, showUsers = null }) => {
     addLastMessage(dataReceived.dataSend);
   });
   const handleClick = () => {
+    if (showComponentResponsive) {
+      activeToggleBlock();
+    }
     setNewMessage(false);
     const userExist = contactUsers.some((userF) => userF._id === user._id);
     if (!userExist) {
@@ -81,7 +86,7 @@ const UserDataInterface = memo(({ user, showUsers = null }) => {
     if (showUsers !== null) {
       showUsers(false);
     }
-    socket.emit("join_user", {
+    /*   socket.emit("join_user", {
       userConnectId: userData.userId,
       userInterlocutorId: user._id,
       userInterlocutor: user,
@@ -92,7 +97,7 @@ const UserDataInterface = memo(({ user, showUsers = null }) => {
       if (!arrayIsEmpty(chatMessages)) {
         addLastMessage(chatMessages[chatMessages.length - 1]);
       }
-    });
+    }); */
   };
 
   useEffect(() => {

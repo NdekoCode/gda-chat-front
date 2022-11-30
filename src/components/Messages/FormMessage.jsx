@@ -3,8 +3,7 @@ import { toast } from "react-toastify";
 import ChatContext from "../../data/AppContext";
 
 const FormMessage = () => {
-  const { selectedUser, setSelectedUser, userData, setActiveChatId, socket } =
-    ChatContext();
+  const { selectedUser, setSelectedUser, userData, socket } = ChatContext();
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
     socket.emit("user_writing", {
@@ -31,7 +30,6 @@ const FormMessage = () => {
     delete userSender.userId;
     socket.emit("send_message", { dataSend, userSender });
     toast.success("Message envoyer");
-    setActiveChatId(selectedUser.user._id);
   };
   return (
     <form

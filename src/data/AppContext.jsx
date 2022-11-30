@@ -18,7 +18,7 @@
  *
  */
 
-import { createContext, memo, useContext, useState } from "react";
+import { createContext, memo, useContext, useEffect, useState } from "react";
 import { API_URL, getDataStorage } from "./utilsFuns";
 
 /** @type {React.Context} */
@@ -39,19 +39,41 @@ export const ContextProvider = memo(({ children }) => {
   const [contactUsers, setContactUsers] = useState([]);
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const [usersIsShown, setUsersIsShown] = useState(false);
   const [searchUser, setSearchUser] = useState("");
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [alert, setAlert] = useState([]);
   const [socket, setSocket] = useState({});
-  const [activeChatId, setActiveChatId] = useState(null);
-
+  const [width, setWindowWidth] = useState(0);
+  const [showComponentResponsive, setShowComponentResponsive] = useState(
+    width < 640
+  );
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+  useEffect(() => {
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+    };
+  }, []);
   const [stateSticky, setStateVisible] = useState({
     visible: false,
     classVisible: "",
   });
+  const [activeBlock, setActiveBlock] = useState(false);
+  const activeToggleBlock = () => {
+    setActiveBlock((state) => !state);
+  };
   const handleVisible = () => {
     setStateVisible((d) => ({ ...d, visible: !stateSticky.visible }));
+  };
+
+  const showLoadUser = () => {
+    setUsersIsShown((state) => !state);
   };
   const addNewContact = (newContact) => {
     for (let contact of contactUsers) {
@@ -71,6 +93,7 @@ export const ContextProvider = memo(({ children }) => {
       }
     }
   };
+
   /** @type {AppChatContext} */
   const value = {
     settings,
@@ -99,8 +122,14 @@ export const ContextProvider = memo(({ children }) => {
     socket,
     setSocket,
     setContactUsers,
-    activeChatId,
-    setActiveChatId,
+    usersIsShown,
+    setUsersIsShown,
+    showLoadUser,
+    activeToggleBlock,
+    activeBlock,
+    setActiveBlock,
+    showComponentResponsive,
+    setShowComponentResponsive,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

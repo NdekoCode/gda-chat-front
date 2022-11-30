@@ -6,6 +6,7 @@ import MessagesContainer from "./MessagesContainer";
 const ChatContainer = memo(() => {
   const { userData, selectedUser, setSelectedUser, socket, contactUsers } =
     ChatContext();
+
   const { messages } = selectedUser;
 
   socket.on("received_message", (dataReceive) => {
@@ -26,7 +27,7 @@ const ChatContainer = memo(() => {
     // setSelectedUser((d) => ({ ...d, messages: msg }));
   });
   return (
-    <div className="relative flex flex-col flex-1">
+    <div className="hidden sm:flex flex-col flex-1 relative">
       <UserChatView user={selectedUser.user} />
       <MessagesContainer messages={messages} userData={userData} />
     </div>

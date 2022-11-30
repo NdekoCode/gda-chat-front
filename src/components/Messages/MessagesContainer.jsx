@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import imageChat from "../../assets/img/WhatsappImage.png";
 import { arrayIsEmpty } from "../../data/utilsFuns";
 import DateMessage from "./DateMessage";
@@ -6,10 +6,18 @@ import FormMessage from "./FormMessage";
 import Message from "./Message";
 
 const MessagesContainer = ({ messages, userData }) => {
+  const messageDiv = useRef(null);
+  useEffect(() => {
+    messageDiv.current?.scrollTo({
+      behavior: "smooth",
+      to: messageDiv.current?.scrollHeight,
+    });
+  });
   return (
     <div
       className="top-0 bottom-0 left-0 right-0 flex flex-col flex-1 overflow-hidden bg-transparent bg-bottom bg-contain bg-chat center center overflow-scroll "
       style={{ backgroundImage: `url('${imageChat}')` }}
+      ref={messageDiv}
     >
       <div className="self-center flex-1 w-full">
         <div className="relative flex flex-col px-3 py-1 m-auto mb-24">

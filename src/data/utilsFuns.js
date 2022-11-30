@@ -97,4 +97,5 @@ export function arrayIsEmpty(arr) {
 export function formatTime(dateTime) {
   return new Date(dateTime).toLocaleTimeString().substring(0, 5);
 }
-export const API_URL = "https://chat-gda.onrender.com/api/v1";
+export const API_URL = import.meta.env.VITE_API_URL;
+export const BASE_URL = import.meta.env.VITE_BASE_URL;

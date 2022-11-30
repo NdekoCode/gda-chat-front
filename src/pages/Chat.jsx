@@ -4,13 +4,15 @@ import ChatSidebar from "../components/users/ChatSidebar";
 import ChatUserInterface from "../components/users/ChatUserInterface";
 import NoSelectedUserMessage from "../components/users/NoSelectedUserMessage";
 import ChatContext from "../data/AppContext";
-import { arrayIsEmpty, findAndSetData } from "../data/utilsFuns";
+import { arrayIsEmpty } from "../data/utilsFuns";
+import { loadData } from "../services/Utils";
 
 const Chat = () => {
   const {
     selectedUser,
     setSelectedUser,
     contactUsers,
+    usersIsShown,
     setContactUsers,
     addNewContact,
     settings,
@@ -19,34 +21,39 @@ const Chat = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    socket.on("user_contact", (userInterloc) => {
-      console.log("Join a bum", userInterloc);
-      const userExist = contactUsers.some(
-        (userF) => userF._id === userInterloc._id
-      );
-      if (!userExist) {
-        addNewContact(userInterloc);
-        setSelectedUser((d) => ({ ...d, messages: [] }));
-      }
-    });
-    setLoading(true);
     (async () => {
-      const loading = await findAndSetData(
-        settings.main_url + "/auth/contacts",
-        setContactUsers
-      )[1];
-      setLoading(loading);
+      const contactsData = await loadData(
+        setContactUsers,
+        setLoading,
+        "/auth/users/contacts"
+      );
+      if (contactsData.alert) {
+        const { alert } = contactsData;
+        alert.statusCode < 400
+          ? toast.info(alert.message)
+          : toast.error(alert.message);
+      }
     })();
+    // socket.on("user_contact", (userInterloc) => {
+    //   console.log("Join a bum", userInterloc);
+    //   const userExist = contactUsers.some(
+    //     (userF) => userF._id === userInterloc._id
+    //   );
+    //   if (!userExist) {
+    //     addNewContact(userInterloc);
+    //     setSelectedUser((d) => ({ ...d, messages: [] }));
+    //   }
+    // });
   }, [isLoading]);
 
-  socket.on("load_messages", (messagesChat) => {
+  /* socket.on("load_messages", (messagesChat) => {
     const userMessages = JSON.parse(messagesChat);
     if (!arrayIsEmpty(userMessages)) {
       setSelectedUser((d) => ({ ...d, messages: userMessages }));
     }
-  });
+  }); */
 
-  socket.on("received_message", (dataReceived) => {
+  /*   socket.on("received_message", (dataReceived) => {
     const dontExist = !contactUsers.some(
       (userF) => userF._id === dataReceived.dataSend.sender
     );
@@ -59,7 +66,7 @@ const Chat = () => {
         messages: [...selectedUser.messages, dataReceived.dataSend],
       }));
     }
-  });
+  }); */
   return (
     <section
       className="h-screen overflow-hidden flex items-center justify-center"
@@ -70,7 +77,7 @@ const Chat = () => {
         <ChatUserInterface isLoading={isLoading} contactUsers={contactUsers} />
         {/* center */}
 
-        {!arrayIsEmpty(selectedUser.user) ? (
+        {!arrayIsEmpty(selectedUser.user) && !usersIsShown ? (
           <ChatContainer />
         ) : (
           <NoSelectedUserMessage />

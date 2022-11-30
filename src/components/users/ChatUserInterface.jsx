@@ -1,4 +1,5 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
+import ChatContext from "../../data/AppContext";
 import { arrayIsEmpty } from "../../data/utilsFuns";
 import StickyNavbar from "../StickyNavbar";
 import AddLoadUsers from "./AddLoadUsers";
@@ -7,16 +8,10 @@ import UserDataInterface from "./UserDataInterface";
 import UserSkeleton from "./UserSkeleton";
 
 const ChatUserInterface = memo(({ contactUsers, isLoading }) => {
-  const [showUser, setShowUser] = useState(false);
-  const showLoadUser = () => {
-    setShowUser((state) => !state);
-  };
+  const { usersIsShown, showLoadUser } = ChatContext();
   return (
     <>
-      <div
-        className="relative flex flex-col hidden h-full bg-white border-r border-gray-300 shadow-xl md:block transform transition-all duration-500 ease-in-out"
-        style={{ width: "24rem" }}
-      >
+      <div className="relative flex flex-col h-full bg-white border-r border-gray-300 shadow-xl md:block transform w-full transition-all sm:w-[24rem] duration-500 ease-in-out">
         <div className="flex justify-between px-3 pt-1 text-white">
           <div className="flex items-center w-full py-2">
             <StickyNavbar />
@@ -169,7 +164,7 @@ const ChatUserInterface = memo(({ contactUsers, isLoading }) => {
           </button>
         </div>
       </div>
-      {showUser && <AddLoadUsers showUsers={showLoadUser} />}
+      {usersIsShown && <AddLoadUsers showUsers={showLoadUser} />}
     </>
   );
 });
