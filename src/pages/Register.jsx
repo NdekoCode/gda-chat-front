@@ -29,23 +29,25 @@ const Register = () => {
     evt.preventDefault();
     const loginData = { ...formData };
     (async () => {
-      const [data, result] = await register(loginData, setAlert);
+      const [data, result] = await register(loginData);
       try {
-        console.log(result);
+        console.log(data);
         if (result) {
-          const [alert, resultLogin] = await login(data, setAlert);
+          setLoading(false);
+          toast.success(data.message);
+          const [alert, resultLogin] = await login(data);
+          console.log(alert, resultLogin);
           if (resultLogin) {
-            setLoading(false);
             const dataStore = getDataStorage("userData");
             setUserData(dataStore);
             setSettings((setting) => ({
               ...setting,
               token: dataStore.token,
             }));
+            console.log(alert.message);
             toast.success(alert.message);
             return setUserIsAuthenticated(result);
           }
-
           return toast.error(alert.message);
         }
 

@@ -34,16 +34,19 @@ export function connectedUser(userData) {
   setDataStorage("userData", userData);
 }
 export async function fetchUserConnect(url, data) {
+  const token = getDataStorage("user_token");
   let loading = true,
     userResponse;
   const params = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: token,
     },
     body: JSON.stringify(data),
   };
   try {
+    console.log(url);
     const response = await fetch(url, params);
     userResponse = await response.json();
     if (response.ok) {
@@ -51,7 +54,14 @@ export async function fetchUserConnect(url, data) {
     }
   } catch (error) {
     loading = false;
-    return [error, loading];
+
+    const alert = {
+      message:
+        "Erreur survenus lors du traitement de la requete " + error.message,
+      statusCode: 500,
+      type: "danger",
+    };
+    return [{ alert }, loading];
   }
   return [userResponse, loading];
 }
@@ -79,42 +89,40 @@ export async function updateUser(dataForm, id, setAlert = null) {
   setAlert(alert);
   return [alert, false];
 }
-export async function login(dataForm, setAlert = (v) => {}) {
+export async function login(dataForm) {
   const loginUrl = API_URL + "/auth/login";
   try {
     const [loginData] = await fetchUserConnect(loginUrl, dataForm);
-    if (loginData.userData) {
+    const { alert } = loginData;
+    if (alert.statusCode < 400) {
       setDataStorage("userData", loginData.userData);
       setDataStorage("user_token", "Bearer " + loginData.userData.token);
       setDataStorage("users", []);
-      return [loginData.alert, true];
+      return [alert, true];
     }
 
-    return [loginData.alert, false];
+    return [alert, false];
   } catch (error) {
     const alert = {
       message: "Erreur survenus lors l'authentification " + error.message,
-      statusCode: 401,
+      statusCode: 500,
       type: "Danger",
     };
-    setAlert(alert);
 
     return [alert, false];
   }
 }
-export async function register(dataForm, setAlert = (v) => {}) {
+export async function register(dataForm) {
   const registerUrl = API_URL + "/auth/register";
-  delete dataForm.confpassword;
   const [responseUserData] = await fetchUserConnect(registerUrl, dataForm);
-  const alert = responseUserData.alert;
+  const { alert } = responseUserData;
+
   if (alert.statusCode < 400 && alert.statusCode !== 309) {
     const userData = {
       email: dataForm.email,
       password: dataForm.password,
     };
-    setAlert(alert);
     return [userData, true];
   }
-  setAlert(alert);
   return [alert, false];
 }

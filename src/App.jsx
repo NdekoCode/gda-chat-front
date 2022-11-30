@@ -41,10 +41,6 @@ function App() {
       removeItem("users");
       socket.on("connect", () => {
         setIsSocketConnect(true);
-        /* socket.emit("join_user", {
-        userConnectId: userData.userId,
-        userInterlocutorId: null,
-      }); */
       });
       socket.on("disconnect", () => {
         setIsSocketConnect(false);
@@ -52,9 +48,13 @@ function App() {
 
       /* socket.emit("user_connected", userData); */
       socket.on("user_login", (user) => {
-        console.log(user.userId, userData.userId);
-        if (user.userId !== userData.userId) {
+        if (user.email !== userData.email) {
           toast.info(user.firstName + " est connecté");
+
+          socket.emit("join_user", {
+            userConnectId: userData.userId,
+            userInterlocutorId: user.userId,
+          });
         }
       });
       (async () => {
@@ -77,7 +77,6 @@ function App() {
       socket.off("disconnect");
       socket.off("user_connected");
       socket.off("new_user");
-      socket.off("user_contact");
     };
   }, [setUserIsAuthenticated, userIsAuthenticated]);
 

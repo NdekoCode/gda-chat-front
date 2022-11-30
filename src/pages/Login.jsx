@@ -20,27 +20,26 @@ const Login = () => {
     setLoading(true);
     evt.preventDefault();
     const loginData = { ...formData };
-    // setFormData({ email: "", password: "" });
-    login(loginData, setAlert)
-      .then(([alert, result]) => {
-        console.log(alert, result);
-        if (result) {
-          const dataStore = getDataStorage("userData");
-          setUserData(dataStore);
-          setSettings((setting) => ({
-            ...setting,
-            token: "Bearer " + dataStore.token,
-          }));
-          if (alert.message) {
-            toast.success(alert.message);
-          }
-          return setUserIsAuthenticated(result);
-        }
-        setLoading(false);
-        toast.error(alert.message);
-        return result;
-      })
-      .catch((error) => toast.error(error.message));
+    setFormData({ email: "", password: "" });
+    (async () => {
+      const [alert, result] = await login(loginData);
+
+      if (result) {
+        const dataStore = getDataStorage("userData");
+        setUserData(dataStore);
+        setSettings((setting) => ({
+          ...setting,
+          token: "Bearer " + dataStore.token,
+        }));
+        toast.success(alert.message);
+
+        return setUserIsAuthenticated(result);
+      }
+
+      setLoading(false);
+      toast.error(alert.message);
+      return result;
+    })();
   };
 
   return (

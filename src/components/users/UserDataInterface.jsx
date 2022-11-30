@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../../data/AppContext";
-import { formatTime, objectIsEmpty } from "../../data/utilsFuns";
+import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
 import UserTyping from "./UserTyping";
 
 const UserDataInterface = memo(({ user, showUsers = null, child }) => {
@@ -15,22 +15,30 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
     activeToggleBlock,
     showComponentResponsive,
   } = ChatContext();
-  // const [userMessages, setUserMessages] = useState([]);
-  const [lastMessage, setLastMessage] = useState({});
-  const [userConnected, setUserConnected] = useState(false);
-  const [newMessage, setNewMessage] = useState(false);
-  const [userTyping, setUserTyping] = useState({
-    userId: null,
-    isTyping: false,
-    userType: {},
-  });
+
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
+
   const chatMessages = messages.filter(
     (msg) =>
       (msg.sender === _id && msg.receiver === userData.userId) ||
       (msg.receiver === _id && msg.sender === userData.userId)
   );
+
+  // Les ETATS
+  const [lastMessage, setLastMessage] = useState(
+    !arrayIsEmpty(chatMessages) && chatMessages[chatMessages.length - 1]
+  );
+  const [userConnected, setUserConnected] = useState(false);
+  const [newMessage, setNewMessage] = useState(false);
+
+  const [userTyping, setUserTyping] = useState({
+    userId: null,
+    isTyping: false,
+    userType: {},
+  });
+
+  // LES FONCTIONS
   const addLastMessage = (msg) => {
     if (msg) {
       const userTest = user._id === msg.receiver || user._id === msg.sender;
@@ -40,6 +48,7 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
     }
   };
 
+  // LES EVENEMENTS SOCKETS
   socket.on("new_user", (userAuth) => {
     if (userAuth.email === user.email && userAuth.email !== userData.email) {
       setUserConnected(true);
