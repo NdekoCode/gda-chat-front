@@ -8,10 +8,13 @@ import UserDataInterface from "./UserDataInterface";
 import UserSkeleton from "./UserSkeleton";
 
 const ChatUserInterface = memo(({ contactUsers, isLoading }) => {
-  const { usersIsShown, showLoadUser } = ChatContext();
+  const { usersIsShown, activeBlock, showLoadUser } = ChatContext();
   return (
     <>
-      <div className="relative flex flex-col h-full bg-white border-r border-gray-300 shadow-xl md:block transform w-full transition-all sm:w-[24rem] duration-500 ease-in-out">
+      <div
+        className="relative fadeLeave flex flex-col h-full bg-white border-r border-gray-300 shadow-xl md:block transform w-full transition-all sm:w-[24rem] duration-500 ease-in-out"
+        style={{ display: activeBlock && "none" }}
+      >
         <div className="flex justify-between px-3 pt-1 text-white">
           <div className="flex items-center w-full py-2">
             <StickyNavbar />

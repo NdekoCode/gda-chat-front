@@ -7,12 +7,12 @@ import {
   setDataStorage,
 } from "../../data/utilsFuns";
 import StickyNavbar from "../StickyNavbar";
-import UserSkeleton from "../UserSkeleton";
 import SearchFormInterface from "./SearchFormInterface";
 import UserDataInterface from "./UserDataInterface";
+import UserSkeleton from "./UserSkeleton";
 
 const AddLoadUsers = ({ showUsers }) => {
-  const { settings, selectedUser } = ChatContext();
+  const { settings } = ChatContext();
   const storageUser = getDataStorage("users");
   const [users, setUsers] = useState(storageUser ? storageUser : []);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,15 +43,13 @@ const AddLoadUsers = ({ showUsers }) => {
         <div className="relative mt-2 mb-4 overflow-x-hidden overflow-y-auto scrolling-touch lg:max-h-sm scrollbar-w-2 scrollbar-track-gray-lighter  scrollbar-thumb-rounded scrollbar-thumb-gray">
           <ul className="flex flex-col inline-block w-full h-screen pb-32 px-2 select-none">
             {!arrayIsEmpty(users)
-              ? users.map((user) => (
-                  <>
-                    <UserDataInterface
-                      key={user._id}
-                      user={user}
-                      showUsers={showUsers}
-                    />
-                    <div className="border-b shadow-bot"></div>
-                  </>
+              ? users.map((user, index) => (
+                  <UserDataInterface
+                    key={index}
+                    user={user}
+                    showUsers={showUsers}
+                    child={<div className="border-b shadow-bot"></div>}
+                  />
                 ))
               : isLoading && <UserSkeleton />}
           </ul>

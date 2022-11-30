@@ -70,7 +70,9 @@ export const ContextProvider = memo(({ children }) => {
   const [activeBlock, setActiveBlock] = useState(false);
   const activeToggleBlock = () => {
     console.log(showComponentResponsive ? "Mobile" : "Desktop");
-    setActiveBlock((state) => !state);
+    if (showComponentResponsive) {
+      setActiveBlock((state) => !state);
+    }
   };
   const handleVisible = () => {
     setStateVisible((d) => ({ ...d, visible: !stateSticky.visible }));

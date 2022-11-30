@@ -4,7 +4,7 @@ import UserChatView from "../users/UserChatView";
 import MessagesContainer from "./MessagesContainer";
 
 const ChatContainer = memo(() => {
-  const { userData, selectedUser, setSelectedUser, socket, contactUsers } =
+  const { userData, selectedUser, setSelectedUser, socket, activeBlock } =
     ChatContext();
 
   const { messages } = selectedUser;
@@ -27,7 +27,10 @@ const ChatContainer = memo(() => {
     // setSelectedUser((d) => ({ ...d, messages: msg }));
   });
   return (
-    <div className="hidden sm:flex flex-col flex-1 relative">
+    <div
+      className="hidden fade sm:flex flex-col flex-1 relative"
+      style={{ display: activeBlock && "flex" }}
+    >
       <UserChatView user={selectedUser.user} />
       <MessagesContainer messages={messages} userData={userData} />
     </div>
