@@ -19,6 +19,7 @@
  */
 
 import { createContext, memo, useContext, useEffect, useState } from "react";
+import { useWindowSize } from "./hooksFunc";
 import { API_URL, getDataStorage } from "./utilsFuns";
 
 /** @type {React.Context} */
@@ -45,14 +46,16 @@ export const ContextProvider = memo(({ children }) => {
   const [users, setUsers] = useState([]);
   const [alert, setAlert] = useState([]);
   const [socket, setSocket] = useState({});
-  const [width, setWindowWidth] = useState(0);
+  const [width, setWindowWidth] = useState(useWindowSize()[0]);
   const [showComponentResponsive, setShowComponentResponsive] = useState(
     width < 640
   );
   const updateDimensions = () => {
     const width = window.innerWidth;
     setWindowWidth(width);
+    setShowComponentResponsive(width < 640);
   };
+
   useEffect(() => {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
@@ -66,6 +69,7 @@ export const ContextProvider = memo(({ children }) => {
   });
   const [activeBlock, setActiveBlock] = useState(false);
   const activeToggleBlock = () => {
+    console.log(showComponentResponsive ? "Mobile" : "Desktop");
     setActiveBlock((state) => !state);
   };
   const handleVisible = () => {
@@ -130,6 +134,7 @@ export const ContextProvider = memo(({ children }) => {
     setActiveBlock,
     showComponentResponsive,
     setShowComponentResponsive,
+    updateDimensions,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

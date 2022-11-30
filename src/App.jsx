@@ -24,8 +24,10 @@ function App() {
     setLoading,
     setUserIsAuthenticated,
     userIsAuthenticated,
+    updateDimensions,
   } = ChatContext();
   useEffect(() => {
+    updateDimensions();
     // On verifie si l'utilisateur est
     setUserIsAuthenticated(verifyUserHasAuthenticated());
     if (!arrayIsEmpty(alert)) {
@@ -50,7 +52,10 @@ function App() {
 
       /* socket.emit("user_connected", userData); */
       socket.on("user_login", (user) => {
-        toast.info(user.firstName + " est connecté");
+        console.log(user.userId, userData.userId);
+        if (user.userId !== userData.userId) {
+          toast.info(user.firstName + " est connecté");
+        }
       });
       (async () => {
         const dataMessages = await loadData(

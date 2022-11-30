@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 export default function useFetch(url, setData, token) {
   const [state, setState] = useState({
     data: [],
@@ -27,4 +27,17 @@ export default function useFetch(url, setData, token) {
     })();
   }, [state.data, state.isLoading]);
   return [state.data, state.isLoading];
+}
+
+export function useWindowSize() {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+  return size;
 }
