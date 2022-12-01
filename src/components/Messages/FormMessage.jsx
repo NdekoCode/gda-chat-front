@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import ChatContext from "../../data/AppContext";
+import { API_URL } from "../../data/utilsFuns";
+import { fetchUserConnect } from "../../services/AuthApi";
 
 const FormMessage = () => {
-  const { selectedUser, setSelectedUser, userData, setActiveChatId, socket } =
-    ChatContext();
+  const { selectedUser, setSelectedUser, userData, socket } = ChatContext();
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
     socket.emit("user_writing", {
-      isWriting: userData,
-      toSend: selectedUser.user,
+      senderUser: userData,
+      receiverUser: selectedUser.user,
     });
     const value = evt.target.value;
     setMsg(value);
@@ -18,9 +19,10 @@ const FormMessage = () => {
     evt.preventDefault();
     setMsg("");
     const dataSend = {
-      sender: userData.userId,
-      receiver: selectedUser.user._id,
+      senderId: userData.userId,
+      receiverId: selectedUser.user._id,
       message: msg,
+      talkersIds: [userData.userId, selectedUser.user._id],
     };
     setSelectedUser((d) => ({
       ...d,
@@ -28,10 +30,17 @@ const FormMessage = () => {
     }));
     const userSender = { ...userData };
     userSender._id = userSender.userId;
+    const urlAddForm = API_URL + "/messages/send/" + selectedUser.user._id;
     delete userSender.userId;
-    socket.emit("send_message", { dataSend, userSender });
-    toast.success("Message envoyer");
-    setActiveChatId(selectedUser.user._id);
+    (async () => {
+      const [response] = await fetchUserConnect(urlAddForm, dataSend);
+      const { alert } = response;
+      if (alert.statusCode < 400) {
+        socket.emit("send_message", { dataSend, userSender });
+        return toast.success(alert.message);
+      }
+      return toast.error(alert.message);
+    })();
   };
   return (
     <form

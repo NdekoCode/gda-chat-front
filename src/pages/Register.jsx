@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import FormFooter from "../components/auth/FormFooter";
 import FormInfos from "../components/auth/FormInfos";
@@ -29,23 +30,25 @@ const Register = () => {
     evt.preventDefault();
     const loginData = { ...formData };
     (async () => {
-      const [data, result] = await register(loginData, setAlert);
+      const [data, result] = await register(loginData);
       try {
-        console.log(result);
+        console.log(data);
         if (result) {
-          const [alert, resultLogin] = await login(data, setAlert);
+          setLoading(false);
+          toast.success(data.message);
+          const [alert, resultLogin] = await login(data);
+          console.log(alert, resultLogin);
           if (resultLogin) {
-            setLoading(false);
             const dataStore = getDataStorage("userData");
             setUserData(dataStore);
             setSettings((setting) => ({
               ...setting,
               token: dataStore.token,
             }));
+            console.log(alert.message);
             toast.success(alert.message);
             return setUserIsAuthenticated(result);
           }
-
           return toast.error(alert.message);
         }
 
@@ -167,6 +170,13 @@ const Register = () => {
                   "Register"
                 )}
               </button>
+            </div>
+            <div className="w-full text-end mt-0">
+              <p className="text-gray-900 underline text-sm">
+                <Link className="text-inherit transition-colors" to="/login">
+                  Already have an account ?, login in
+                </Link>
+              </p>
             </div>
           </form>
           {/* Footer */}

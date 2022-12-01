@@ -1,8 +1,13 @@
 import React from "react";
+import ChatContext from "../../data/AppContext";
 
 const NoSelectedUserMessage = () => {
+  const { activeBlock } = ChatContext();
   return (
-    <div className="top-0 bottom-0 left-0 right-0 flex flex-col flex-1 overflow-hidden bg-transparent bg-bottom bg-contain bg-chat center center bg-white">
+    <div
+      className={`top-0 bottom-0 left-0 right-0 flex flex-col flex-1 overflow-hidden bg-transparent bg-bottom bg-contain bg-chat center center bg-white`}
+      style={{ display: activeBlock && "flex" }}
+    >
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col justify-center items-center">
           <svg

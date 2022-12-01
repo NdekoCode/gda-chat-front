@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import FormFooter from "../components/auth/FormFooter";
 import FormInfos from "../components/auth/FormInfos";
@@ -20,25 +21,26 @@ const Login = () => {
     setLoading(true);
     evt.preventDefault();
     const loginData = { ...formData };
-    // setFormData({ email: "", password: "" });
-    login(loginData, setAlert)
-      .then(([alert, result]) => {
-        console.log(alert, result);
-        if (result) {
-          const dataStore = getDataStorage("userData");
-          setUserData(dataStore);
-          setSettings((setting) => ({
-            ...setting,
-            token: "Bearer " + dataStore.token,
-          }));
-          toast.success(alert.message);
-          return setUserIsAuthenticated(result);
-        }
-        setLoading(false);
-        toast.error(alert.message);
-        return result;
-      })
-      .catch((error) => toast.error(error.message));
+    setFormData({ email: "", password: "" });
+    (async () => {
+      const [alert, result] = await login(loginData);
+
+      if (result) {
+        const dataStore = getDataStorage("userData");
+        setUserData(dataStore);
+        setSettings((setting) => ({
+          ...setting,
+          token: "Bearer " + dataStore.token,
+        }));
+        toast.success(alert.message);
+
+        return setUserIsAuthenticated(result);
+      }
+
+      setLoading(false);
+      toast.error(alert.message);
+      return result;
+    })();
   };
 
   return (
@@ -115,6 +117,13 @@ const Login = () => {
                   "Login"
                 )}
               </button>
+            </div>
+            <div className="w-full text-end mt-0">
+              <p className="text-gray-900 underline text-sm">
+                <Link className="text-inherit transition-colors" to="/register">
+                  Don't have an account ?, create one
+                </Link>
+              </p>
             </div>
           </form>
           {/* Footer */}

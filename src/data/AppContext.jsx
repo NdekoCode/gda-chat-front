@@ -18,8 +18,11 @@
  *
  */
 
-import { createContext, memo, useContext, useState } from "react";
-import { API_URL, getDataStorage } from "./utilsFuns";
+import { createContext, memo, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { logOut } from "../services/AuthApi";
+import { useWindowSize } from "./hooksFunc";
+import { API_URL, getDataStorage, isVarEmpty } from "./utilsFuns";
 
 /** @type {React.Context} */
 const AppContext = createContext();
@@ -39,37 +42,60 @@ export const ContextProvider = memo(({ children }) => {
   const [contactUsers, setContactUsers] = useState([]);
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const [usersIsShown, setUsersIsShown] = useState(false);
   const [searchUser, setSearchUser] = useState("");
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [alert, setAlert] = useState([]);
   const [socket, setSocket] = useState({});
-  const [activeChatId, setActiveChatId] = useState(null);
+  const [width, setWindowWidth] = useState(useWindowSize()[0]);
+  const [showComponentResponsive, setShowComponentResponsive] = useState(
+    width < 640
+  );
+  const updateDimensions = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+    setShowComponentResponsive(width < 640);
+  };
 
+  useEffect(() => {
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+    };
+  }, []);
   const [stateSticky, setStateVisible] = useState({
     visible: false,
     classVisible: "",
   });
+  const [activeBlock, setActiveBlock] = useState(false);
+  const activeToggleBlock = () => {
+    console.log(showComponentResponsive ? "Mobile" : "Desktop");
+    if (showComponentResponsive) {
+      setActiveBlock((state) => !state);
+    }
+  };
+
   const handleVisible = () => {
     setStateVisible((d) => ({ ...d, visible: !stateSticky.visible }));
   };
+
+  const showLoadUser = () => {
+    setUsersIsShown((state) => !state);
+  };
   const addNewContact = (newContact) => {
-    for (let contact of contactUsers) {
-      if (
-        (contact._id !== newContact._id ||
-          contact.email !== newContact.email) &&
-        contact._id !== userData.userId
-      ) {
-        setContactUsers((state) => [newContact, ...state]);
-        console.log(
-          "New user ",
-          newContact.firstName,
-          newContact.lastName,
-          newContact.email
-        );
-        console.log(contact._id, newContact._id, contact.email);
-      }
+    const contact = contactUsers.find((ct) => ct.email === newContact.email);
+    if (isVarEmpty(contact) && newContact.email !== userData.email) {
+      setContactUsers((state) => [newContact, ...state]);
     }
+  };
+
+  const logOutUser = () => {
+    toast.info("Vous etes deconnecter");
+    setUserIsAuthenticated(false);
+    socket.emit("logout_user", userData);
+    logOut();
   };
   /** @type {AppChatContext} */
   const value = {
@@ -99,8 +125,16 @@ export const ContextProvider = memo(({ children }) => {
     socket,
     setSocket,
     setContactUsers,
-    activeChatId,
-    setActiveChatId,
+    usersIsShown,
+    setUsersIsShown,
+    showLoadUser,
+    activeToggleBlock,
+    activeBlock,
+    setActiveBlock,
+    showComponentResponsive,
+    setShowComponentResponsive,
+    updateDimensions,
+    logOutUser,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
