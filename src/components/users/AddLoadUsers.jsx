@@ -8,7 +8,7 @@ import {
 } from "../../data/utilsFuns";
 import StickyNavbar from "../StickyNavbar";
 import SearchFormInterface from "./SearchFormInterface";
-import UserDataInterface from "./UserDataInterface";
+import UserLoadInterface from "./UserLoadInterface";
 import UserSkeleton from "./UserSkeleton";
 
 const AddLoadUsers = ({ showUsers }) => {
@@ -44,7 +44,7 @@ const AddLoadUsers = ({ showUsers }) => {
           <ul className="flex flex-col inline-block w-full h-screen pb-32 px-2 select-none">
             {!arrayIsEmpty(users)
               ? users.map((user, index) => (
-                  <UserDataInterface
+                  <UserLoadInterface
                     key={index}
                     user={user}
                     showUsers={showUsers}
@@ -55,12 +55,12 @@ const AddLoadUsers = ({ showUsers }) => {
           </ul>
         </div>
         <div
-          className="fixed -top-3 left-3 mr-4 sm:-right-20 sm:left-auto z-50 mt-6 sm:ml-4 sm:mr-0"
+          className="fixed z-50 -top-3 left-3 mr-4 sm:-right-20 sm:left-auto mt-6 sm:ml-4 sm:mr-0"
           title="Close"
         >
           <button
             onClick={showUsers}
-            className="animate-bounce sm:animate-pulse hover:animate-none shadow-md flex items-center justify-center bg-red-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-lg transition-all shodow-lg"
+            className="animate-bounce relative z-50 sm:animate-pulse hover:animate-none shadow-md flex items-center justify-center bg-red-500 w-12 h-12 mr-3 text-xl font-semibold focus:outline-none text-white flex-no-shrink rounded-lg transition-all shodow-lg"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -20,7 +20,7 @@
 
 import { createContext, memo, useContext, useEffect, useState } from "react";
 import { useWindowSize } from "./hooksFunc";
-import { API_URL, getDataStorage } from "./utilsFuns";
+import { API_URL, getDataStorage, isVarEmpty } from "./utilsFuns";
 
 /** @type {React.Context} */
 const AppContext = createContext();
@@ -82,21 +82,9 @@ export const ContextProvider = memo(({ children }) => {
     setUsersIsShown((state) => !state);
   };
   const addNewContact = (newContact) => {
-    for (let contact of contactUsers) {
-      if (
-        (contact._id !== newContact._id ||
-          contact.email !== newContact.email) &&
-        contact._id !== userData.userId
-      ) {
-        setContactUsers((state) => [newContact, ...state]);
-        console.log(
-          "New user ",
-          newContact.firstName,
-          newContact.lastName,
-          newContact.email
-        );
-        console.log(contact._id, newContact._id, contact.email);
-      }
+    const contact = contactUsers.find((ct) => ct.email === newContact.email);
+    if (isVarEmpty(contact)) {
+      setContactUsers((state) => [newContact, ...state]);
     }
   };
 

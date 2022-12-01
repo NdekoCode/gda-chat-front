@@ -8,16 +8,8 @@ import { arrayIsEmpty } from "../data/utilsFuns";
 import { loadData } from "../services/Utils";
 
 const Chat = () => {
-  const {
-    selectedUser,
-    setSelectedUser,
-    contactUsers,
-    usersIsShown,
-    setContactUsers,
-    addNewContact,
-    settings,
-    socket,
-  } = ChatContext();
+  const { selectedUser, contactUsers, usersIsShown, setContactUsers } =
+    ChatContext();
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,7 +47,7 @@ const Chat = () => {
 
   /*   socket.on("received_message", (dataReceived) => {
     const dontExist = !contactUsers.some(
-      (userF) => userF._id === dataReceived.dataSend.sender
+      (userF) => userF._id === dataReceived.dataSend.senderId
     );
     if (dontExist) {
       console.log("User don't exists in my contact", dataReceived.userSender);

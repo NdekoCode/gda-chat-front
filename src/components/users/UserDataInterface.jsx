@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import ChatContext from "../../data/AppContext";
-import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
+import { formatTime, objectIsEmpty, toStr } from "../../data/utilsFuns";
 import UserTyping from "./UserTyping";
 
 const UserDataInterface = memo(({ user, showUsers = null, child }) => {
@@ -19,15 +19,21 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
 
+  // Recupère moi tous les messages que l'utilisateur sur lequel m'as déjà envoyer ou que je lui est déja envoyer m'a déjà envoyer
+  const userChat = messages.filter(
+    (ms) =>
+      (ms.senderId === userData.userId && ms.receiverId === user._id) ||
+      (ms.senderId === user._id && ms.receiverId === userData.userId)
+  );
+  console.log(userChat);
   const chatMessages = messages.filter(
     (msg) =>
-      (msg.sender === _id && msg.receiver === userData.userId) ||
-      (msg.receiver === _id && msg.sender === userData.userId)
+      toStr(msg.talkersIds) === toStr([_id, userData.userId]) ||
+      toStr([userData.userId, _id]) === toStr(msg.talkersIds)
   );
-
   // Les ETATS
   const [lastMessage, setLastMessage] = useState(
-    !arrayIsEmpty(chatMessages) && chatMessages[chatMessages.length - 1]
+    userChat[userChat.length - 1] ? userChat[userChat.length - 1] : {}
   );
   const [userConnected, setUserConnected] = useState(false);
   const [newMessage, setNewMessage] = useState(false);
@@ -40,14 +46,15 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
 
   // LES FONCTIONS
   const addLastMessage = (msg) => {
+    console.log(msg, user._id);
     if (msg) {
-      const userTest = user._id === msg.receiver || user._id === msg.sender;
+      const userTest = user._id === msg.receiverId || user._id === msg.senderId;
       if (userTest) {
         setLastMessage(msg);
       }
     }
   };
-
+  console.log(chatMessages);
   // LES EVENEMENTS SOCKETS
   socket.on("new_user", (userAuth) => {
     if (userAuth.email === user.email && userAuth.email !== userData.email) {
@@ -70,32 +77,33 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
       2500
     );
   });
+  // On verifie si l'utilisateur qui nous envois le message
   socket.on("received_message", (dataReceived) => {
     if (
-      dataReceived.dataSend.receiver === userData.userId &&
-      dataReceived.dataSend.sender !== userData.userId
+      dataReceived.dataSend.receiverId === userData.userId &&
+      dataReceived.dataSend.senderId === user._id
     ) {
       setNewMessage(true);
+      addLastMessage(dataReceived.dataSend);
     }
-    addLastMessage(dataReceived.dataSend);
   });
   const handleClick = () => {
+    const userExist = contactUsers.some((userF) => userF._id === user._id);
+    setNewMessage(false);
+    console.log(userChat, userData.userId, user._id);
     if (showComponentResponsive) {
-      console.log("In mobile");
       activeToggleBlock();
     }
-    setNewMessage(false);
-    const userExist = contactUsers.some((userF) => userF._id === user._id);
-    if (!userExist) {
-      console.log("User don't exists in my contact", user);
-      addNewContact(user);
-      setSelectedUser((d) => ({ ...d, user: user, messages: [] }));
-    } else {
-      setSelectedUser((d) => ({ ...d, user: user }));
-    }
+
     if (showUsers !== null) {
       showUsers(false);
     }
+    if (!userExist) {
+      console.log("User don't exists in my contact", user);
+      addNewContact(user);
+    }
+    setSelectedUser((d) => ({ ...d, user: user, messages: userChat }));
+
     /*   socket.emit("join_user", {
       userConnectId: userData.userId,
       userInterlocutorId: user._id,
@@ -111,7 +119,7 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
   };
 
   useEffect(() => {
-    addLastMessage(chatMessages[chatMessages.length - 1]);
+    addLastMessage(userChat[userChat.length - 1]);
   }, [lastMessage]);
   return (
     <>
@@ -129,7 +137,7 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
             <div className="relative flex items-center justify-center w-12 h-12 ml-2 mr-3 text-xl font-semibold text-white bg-blue-500 rounded-full flex-no-shrink">
               {image ? (
                 <img
-                  className="object-cover w-12 h-12 rounded-full"
+                  className="object-cover w-12 h-12 rounded-full overflow-hidden flex justify-center items-center"
                   src={image}
                   alt={username}
                 />
@@ -194,10 +202,8 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
                       user={userTyping.userType}
                       isTyping={userTyping.isTyping}
                     />
-                  ) : !objectIsEmpty(lastMessage) ? (
-                    lastMessage.message
                   ) : (
-                    ""
+                    !objectIsEmpty(lastMessage) && lastMessage.message
                   )}{" "}
                 </span>
                 {JSON.stringify(newMessage)}

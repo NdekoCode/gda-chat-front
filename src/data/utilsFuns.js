@@ -69,7 +69,7 @@ export async function fetchData(url) {
     const responseData = await response.json();
     if (response.ok) {
       data = responseData;
-      loading = fallse;
+      loading = false;
     }
 
     console.log(responseData);
@@ -81,7 +81,7 @@ export async function fetchData(url) {
 }
 export async function findAndSetData(url, setData) {
   const [data, loading] = await fetchData(url);
-  if (data !== undefined && data !== null) {
+  if (!isVarEmpty(data)) {
     setData(data);
   }
   return [data, loading];
@@ -90,9 +90,15 @@ export async function findAndSetData(url, setData) {
 export function objectIsEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
+export function toStr(val) {
+  val.toString();
+}
 
+export function isVarEmpty(value) {
+  return value === undefined || value === null;
+}
 export function arrayIsEmpty(arr) {
-  return typeof arr !== "undefined" && arr !== null && arr.length < 1;
+  return !isVarEmpty(arr) && arr.length < 1;
 }
 export function formatTime(dateTime) {
   return new Date(dateTime).toLocaleTimeString().substring(0, 5);

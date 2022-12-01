@@ -27,10 +27,10 @@ const MessagesContainer = ({ messages, userData }) => {
           {!arrayIsEmpty(messages) && (
             <>
               <DateMessage date=" May 6" />
-              {messages.map(({ sender, message, createdAt }, index) => (
+              {messages.map(({ senderId, message, createdAt }, index) => (
                 <Message
                   key={index}
-                  sender={sender === userData.userId}
+                  sender={senderId === userData.userId}
                   date={createdAt}
                   msg={message}
                 />

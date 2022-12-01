@@ -13,7 +13,7 @@ const ChatContainer = memo(() => {
     console.log("New message detected ", dataReceive.dataSend);
     const msg = selectedUser.messages.filter(
       (d) =>
-        d.receiver !== dataReceive.userSender.receiver ||
+        d.receiverId !== dataReceive.userSender.receiverId ||
         d.message !== dataReceive.dataSend.message ||
         d.createdAt !== dataReceive.dataSend.createdAt
     );
