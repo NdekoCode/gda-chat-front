@@ -25,7 +25,7 @@ const UserLoadInterface = memo(({ user, showUsers = null, child }) => {
   // Les ETATS
   const [userConnected, setUserConnected] = useState(false);
   // LES EVENEMENTS SOCKETS
-  socket.on("new_user", (userAuth) => {
+  socket.on("contact_online", (userAuth) => {
     if (userAuth.email === user.email && userAuth.email !== userData.email) {
       setUserConnected(true);
     }

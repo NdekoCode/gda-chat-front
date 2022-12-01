@@ -9,19 +9,16 @@ import ChatContext from "./data/AppContext";
 import { arrayIsEmpty, BASE_URL, removeItem } from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
-import { loadData } from "./services/Utils";
 const socket = IO.connect(BASE_URL);
 function App() {
   const [isSocketConnect, setIsSocketConnect] = useState(socket.connected);
   const [lastConnect, setLastConnect] = useState(null);
 
   const {
-    setMessages,
     userData,
     alert,
     setSocket,
     setAlert,
-    setLoading,
     setUserIsAuthenticated,
     userIsAuthenticated,
     updateDimensions,
@@ -41,42 +38,33 @@ function App() {
       removeItem("users");
       socket.on("connect", () => {
         setIsSocketConnect(true);
+        if (userIsAuthenticated) {
+          // Si je suis connecter au tout debut je vais rejoindre mon propre salon
+          socket.emit("join_conversation", {
+            userConnectId: userData.userId,
+            userInterlocutorId: userData.userId,
+          });
+          socket.emit("user_online", userData);
+        }
       });
       socket.on("disconnect", () => {
         setIsSocketConnect(false);
       });
 
-      /* socket.emit("user_connected", userData); */
       socket.on("user_login", (user) => {
         if (user.email !== userData.email) {
           toast.info(user.firstName + " est connecté");
-
-          socket.emit("join_user", {
-            userConnectId: userData.userId,
-            userInterlocutorId: user.userId,
-          });
         }
       });
-      (async () => {
-        const dataMessages = await loadData(
-          setMessages,
-          setLoading,
-          "/messages"
-        );
-        if (dataMessages.alert) {
-          const { alert } = dataMessages;
-          alert.statusCode < 400
-            ? toast.info(alert.message)
-            : toast.error(alert.message);
-        }
-      })();
     }
 
     return () => {
       socket.off("connect");
       socket.off("disconnect");
-      socket.off("user_connected");
-      socket.off("new_user");
+      socket.off("user_login");
+      socket.off("send_message");
+      socket.off("user_contact");
+      socket.off("user_writing");
     };
   }, [setUserIsAuthenticated, userIsAuthenticated]);
 

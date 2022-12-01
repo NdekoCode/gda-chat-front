@@ -9,8 +9,8 @@ const FormMessage = () => {
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
     socket.emit("user_writing", {
-      isWriting: userData,
-      toSend: selectedUser.user,
+      senderUser: userData,
+      receiverUser: selectedUser.user,
     });
     const value = evt.target.value;
     setMsg(value);

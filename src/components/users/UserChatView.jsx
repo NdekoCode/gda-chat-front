@@ -11,7 +11,7 @@ const UserChatView = ({ user }) => {
   });
 
   socket.on("typing", (user) => {
-    setUserTyping({ isTyping: true, userType: user });
+    setUserTyping({ isTyping: true, userType: user.senderUser });
   });
   return (
     !objectIsEmpty(user) && (

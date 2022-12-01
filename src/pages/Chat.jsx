@@ -8,8 +8,13 @@ import { arrayIsEmpty } from "../data/utilsFuns";
 import { loadData } from "../services/Utils";
 
 const Chat = () => {
-  const { selectedUser, contactUsers, usersIsShown, setContactUsers } =
-    ChatContext();
+  const {
+    selectedUser,
+    contactUsers,
+    usersIsShown,
+    setContactUsers,
+    setMessages,
+  } = ChatContext();
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,40 +30,18 @@ const Chat = () => {
           ? toast.info(alert.message)
           : toast.error(alert.message);
       }
+
+      const dataMessages = await loadData(setMessages, setLoading, "/messages");
+      if (dataMessages.alert) {
+        const { alert } = dataMessages;
+        alert.statusCode < 400
+          ? toast.info(alert.message)
+          : toast.error(alert.message);
+      }
     })();
-    // socket.on("user_contact", (userInterloc) => {
-    //   console.log("Join a bum", userInterloc);
-    //   const userExist = contactUsers.some(
-    //     (userF) => userF._id === userInterloc._id
-    //   );
-    //   if (!userExist) {
-    //     addNewContact(userInterloc);
-    //     setSelectedUser((d) => ({ ...d, messages: [] }));
-    //   }
-    // });
-  }, [isLoading]);
+    (async () => {})();
+  }, []);
 
-  /* socket.on("load_messages", (messagesChat) => {
-    const userMessages = JSON.parse(messagesChat);
-    if (!arrayIsEmpty(userMessages)) {
-      setSelectedUser((d) => ({ ...d, messages: userMessages }));
-    }
-  }); */
-
-  /*   socket.on("received_message", (dataReceived) => {
-    const dontExist = !contactUsers.some(
-      (userF) => userF._id === dataReceived.dataSend.senderId
-    );
-    if (dontExist) {
-      console.log("User don't exists in my contact", dataReceived.userSender);
-      addNewContact(dataReceived.userSender);
-    } else {
-      setSelectedUser((d) => ({
-        ...d,
-        messages: [...selectedUser.messages, dataReceived.dataSend],
-      }));
-    }
-  }); */
   return (
     <section
       className="h-screen overflow-hidden flex items-center justify-center"

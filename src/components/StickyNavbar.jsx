@@ -1,20 +1,13 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import ChatContext from "../data/AppContext";
-import { logOut } from "../services/AuthApi";
 
 const StickyNavbar = () => {
-  const { handleVisible, setUserIsAuthenticated, userData } = ChatContext();
+  const { handleVisible, userData, logOutUser } = ChatContext();
   const [state, setState] = useState({
     visible: false,
     classVisible: "",
   });
 
-  const logOutUser = () => {
-    toast.info("Vous etes deconnecter");
-    setUserIsAuthenticated(false);
-    logOut();
-  };
   const handleStickyVisible = () => {
     setState((d) => ({ ...d, visible: !state.visible }));
   };

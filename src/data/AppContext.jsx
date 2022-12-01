@@ -19,6 +19,8 @@
  */
 
 import { createContext, memo, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { logOut } from "../services/AuthApi";
 import { useWindowSize } from "./hooksFunc";
 import { API_URL, getDataStorage, isVarEmpty } from "./utilsFuns";
 
@@ -74,6 +76,7 @@ export const ContextProvider = memo(({ children }) => {
       setActiveBlock((state) => !state);
     }
   };
+
   const handleVisible = () => {
     setStateVisible((d) => ({ ...d, visible: !stateSticky.visible }));
   };
@@ -83,11 +86,17 @@ export const ContextProvider = memo(({ children }) => {
   };
   const addNewContact = (newContact) => {
     const contact = contactUsers.find((ct) => ct.email === newContact.email);
-    if (isVarEmpty(contact)) {
+    if (isVarEmpty(contact) && newContact.email !== userData.email) {
       setContactUsers((state) => [newContact, ...state]);
     }
   };
 
+  const logOutUser = () => {
+    toast.info("Vous etes deconnecter");
+    setUserIsAuthenticated(false);
+    socket.emit("logout_user", userData);
+    logOut();
+  };
   /** @type {AppChatContext} */
   const value = {
     settings,
@@ -125,6 +134,7 @@ export const ContextProvider = memo(({ children }) => {
     showComponentResponsive,
     setShowComponentResponsive,
     updateDimensions,
+    logOutUser,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
