@@ -4,15 +4,7 @@ import UserChatView from "../users/UserChatView";
 import MessagesContainer from "./MessagesContainer";
 
 const ChatContainer = memo(() => {
-  const {
-    userData,
-    selectedUser,
-    setSelectedUser,
-    socket,
-    activeBlock,
-    setMessages,
-    setLoading,
-  } = ChatContext();
+  const { userData, selectedUser, activeBlock } = ChatContext();
 
   const { messages } = selectedUser;
   return (
