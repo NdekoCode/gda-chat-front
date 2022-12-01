@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import FormFooter from "../components/auth/FormFooter";
 import FormInfos from "../components/auth/FormInfos";
@@ -116,6 +117,13 @@ const Login = () => {
                   "Login"
                 )}
               </button>
+            </div>
+            <div className="w-full text-end mt-0">
+              <p className="text-gray-900 underline text-sm">
+                <Link className="text-inherit transition-colors" to="/register">
+                  Don't have an account ?, create one
+                </Link>
+              </p>
             </div>
           </form>
           {/* Footer */}
