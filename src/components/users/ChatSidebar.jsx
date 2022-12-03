@@ -1,9 +1,7 @@
-import React from "react";
-import ChatContext from "../../data/AppContext";
+import React, { memo } from "react";
 import StickyButton from "../StickyButton";
 
-const ChatSidebar = () => {
-  const { stateSticky, userData, handleVisible } = ChatContext();
+const ChatSidebar = memo(({ stateSticky, userData, handleVisible }) => {
   return (
     <aside
       className={
@@ -171,6 +169,6 @@ const ChatSidebar = () => {
       </div>
     </aside>
   );
-};
+});
 
 export default ChatSidebar;

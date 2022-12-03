@@ -9,8 +9,7 @@ import { getDataStorage } from "../data/utilsFuns";
 import { login } from "../services/AuthApi";
 
 const Login = () => {
-  const { setUserIsAuthenticated, setUserData, setSettings, setAlert } =
-    ChatContext();
+  const { setUserIsAuthenticated, setUserData, setSettings } = ChatContext();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setLoading] = useState(false);
   const handleChange = ({ currentTarget }) => {
