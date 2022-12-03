@@ -23,12 +23,7 @@ export function verifyUserHasAuthenticated() {
   return isValid;
 }
 export function verifyUserData() {
-  const data = getDataStorage("userData");
-  if (data !== null && data !== undefined) {
-    // On verifie si le tableau retourner est supérieur à 1
-    return Object.keys(data).length > 0;
-  }
-  return false;
+  return verifyUserHasAuthenticated();
 }
 export function connectedUser(userData) {
   setDataStorage("userData", userData);
@@ -46,7 +41,6 @@ export async function fetchUserConnect(url, data) {
     body: JSON.stringify(data),
   };
   try {
-    console.log(url);
     const response = await fetch(url, params);
     userResponse = await response.json();
     if (response.ok) {

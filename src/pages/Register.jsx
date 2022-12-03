@@ -32,12 +32,10 @@ const Register = () => {
     (async () => {
       const [data, result] = await register(loginData);
       try {
-        console.log(data);
         if (result) {
           setLoading(false);
           toast.success(data.message);
           const [alert, resultLogin] = await login(data);
-          console.log(alert, resultLogin);
           if (resultLogin) {
             const dataStore = getDataStorage("userData");
             setUserData(dataStore);

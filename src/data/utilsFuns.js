@@ -95,13 +95,37 @@ export function toStr(val) {
 }
 
 export function isVarEmpty(value) {
-  return value === undefined || value === null;
+  return value === undefined || value === null || value === "";
 }
 export function arrayIsEmpty(arr) {
   return !isVarEmpty(arr) && arr.length < 1;
 }
 export function formatTime(dateTime) {
   return new Date(dateTime).toLocaleTimeString().substring(0, 5);
+}
+
+export function addNewContact(newContact, setContactUsers) {
+  /** @type {array} */
+  const contacts = getDataStorage("contacts");
+
+  const userData = getDataStorage("userData");
+  const contact = contacts.find((ct) => ct.email === newContact.email);
+  if (isVarEmpty(contact) && newContact.email !== userData.email) {
+    contacts.unshift(newContact);
+    setDataStorage("contacts", contacts);
+    setContactUsers(contacts);
+  }
+}
+export function loadContact(contacts, contactUsers, setContactUsers) {
+  /** @type {array} */
+  const storeContacts = getDataStorage("contacts");
+  if (
+    storeContacts.length !== contactUsers.length ||
+    (arrayIsEmpty(storeContacts) && arrayIsEmpty(contactUsers))
+  ) {
+    setContactUsers(contacts);
+    setDataStorage("contacts", contacts);
+  }
 }
 export const API_URL = import.meta.env.VITE_API_URL;
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
