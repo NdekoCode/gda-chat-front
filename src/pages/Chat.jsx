@@ -25,8 +25,9 @@ const Chat = () => {
     contactUsers,
     setMessages,
     addInterlocutorId,
+    stateSticky,
     userData,
-    messages,
+    handleVisible,
   } = ChatContext();
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
@@ -56,21 +57,13 @@ const Chat = () => {
       }
     })();
     socket.on("received_message", (dataReceived) => {
-      const { userSender, dataSend } = dataReceived;
+      const { userSender } = dataReceived;
       const currentId = getDataStorage("interlocId");
       loadData(setMessages, setLoading, "/messages")
         .then((messages) => {
           const userChat = [
             ...new Set(messages.map((ms) => JSON.stringify(ms))),
           ].map((ms) => JSON.parse(ms));
-          /* const userChat = messages.filter(
-            (ms) =>
-              (ms.senderId === userSender._id &&
-                ms.receiverId === userData.userId) ||
-              (ms.senderId === userData.userId &&
-                ms.receiverId === userSender._id)
-          ); */
-          console.log(messages, userChat);
           setSelectedUser((d) => ({
             ...d,
             messages: [
@@ -106,7 +99,11 @@ const Chat = () => {
           <NoSelectedUserMessage />
         )}
         {/* right */}
-        <ChatSidebar />
+        <ChatSidebar
+          stateSticky={stateSticky}
+          userData={userData}
+          handleVisible={handleVisible}
+        />
       </div>
     </section>
   );

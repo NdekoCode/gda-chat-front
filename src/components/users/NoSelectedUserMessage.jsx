@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import ChatContext from "../../data/AppContext";
 
-const NoSelectedUserMessage = () => {
+const NoSelectedUserMessage = memo(() => {
   const { activeBlock } = ChatContext();
   return (
     <div
@@ -118,6 +118,6 @@ const NoSelectedUserMessage = () => {
       </div>
     </div>
   );
-};
+});
 
 export default NoSelectedUserMessage;
