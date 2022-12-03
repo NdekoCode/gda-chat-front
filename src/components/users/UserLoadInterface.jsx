@@ -1,18 +1,19 @@
 import moment from "moment/moment";
 import React, { memo, useState } from "react";
 import ChatContext from "../../data/AppContext";
+import { addNewContact } from "../../data/utilsFuns";
 
 const UserLoadInterface = memo(({ user, showUsers = null, child }) => {
   const {
     messages,
     selectedUser,
     setSelectedUser,
+    setContactUsers,
     userData,
     socket,
-    contactUsers,
-    addNewContact,
     activeToggleBlock,
     showComponentResponsive,
+    addInterlocutorId,
   } = ChatContext();
 
   const { firstName, lastName, image, username, _id } = user;
@@ -32,18 +33,20 @@ const UserLoadInterface = memo(({ user, showUsers = null, child }) => {
   });
 
   const handleClick = () => {
-    const userExist = contactUsers.some((userF) => userF.email === user.email);
+    addInterlocutorId(user._id);
     if (showUsers !== null) {
       showUsers(false);
     }
     if (showComponentResponsive) {
       activeToggleBlock();
     }
-    if (!userExist) {
-      console.log("User don't exists in my contact", user);
-      addNewContact(user);
-    }
-    setSelectedUser((d) => ({ ...d, user: user, messages: userChat }));
+    addNewContact(user, setContactUsers);
+    setSelectedUser((d) => ({
+      ...d,
+      userId: user._id,
+      user: user,
+      messages: userChat,
+    }));
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import ChatContext from "../../data/AppContext";
 import { arrayIsEmpty } from "../../data/utilsFuns";
 import StickyNavbar from "../StickyNavbar";
@@ -7,7 +7,7 @@ import SearchFormInterface from "./SearchFormInterface";
 import UserDataInterface from "./UserDataInterface";
 import UserSkeleton from "./UserSkeleton";
 
-const ChatUserInterface = memo(({ contactUsers, isLoading }) => {
+const ChatUserInterface = ({ contactUsers, isLoading }) => {
   const { usersIsShown, activeBlock, showLoadUser } = ChatContext();
   return (
     <>
@@ -67,6 +67,6 @@ const ChatUserInterface = memo(({ contactUsers, isLoading }) => {
       {usersIsShown && <AddLoadUsers showUsers={showLoadUser} />}
     </>
   );
-});
+};
 
 export default ChatUserInterface;

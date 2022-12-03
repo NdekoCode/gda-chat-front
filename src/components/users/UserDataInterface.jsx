@@ -1,39 +1,32 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatContext from "../../data/AppContext";
-import { formatTime, isVarEmpty, objectIsEmpty } from "../../data/utilsFuns";
-import { loadData } from "../../services/Utils";
+import { arrayIsEmpty, formatTime, objectIsEmpty } from "../../data/utilsFuns";
 import UserTyping from "./UserTyping";
 
-const UserDataInterface = memo(({ user, showUsers = null, child }) => {
+const UserDataInterface = ({ user, showUsers = null, child }) => {
   const {
     messages,
     selectedUser,
     setSelectedUser,
     userData,
     socket,
-    contactUsers,
-    addNewContact,
     activeToggleBlock,
     showComponentResponsive,
-    setMessages,
-    setLoading,
+    addInterlocutorId,
   } = ChatContext();
 
   const { firstName, lastName, image, username, _id } = user;
   const fullName = `${firstName} ${lastName}`;
 
-  // Recupère moi tous les messages que l'utilisateur sur lequel m'as déjà envoyer ou que je lui est déja envoyer m'a déjà envoyer
-  const userChat = messages.filter(
-    (ms) =>
-      (ms.senderId === userData.userId && ms.receiverId === user._id) ||
-      (ms.senderId === user._id && ms.receiverId === userData.userId)
-  );
   // Les ETATS
   const [lastMessage, setLastMessage] = useState({});
   const [userConnected, setUserConnected] = useState(false);
+  const [userMessages, setUserMessages] = useState([]);
+  const [messageLoad, setMessageLoad] = useState(true);
   const [newMessage, setNewMessage] = useState({
     state: false,
     senderId: null,
+    receiverId: null,
   });
 
   const [userTyping, setUserTyping] = useState({
@@ -45,7 +38,9 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
   // LES FONCTIONS
   const addLastMessage = (msg) => {
     if (msg) {
-      const userTest = user._id === msg.receiverId || user._id === msg.senderId;
+      const userTest =
+        (user._id === msg.senderId && userData.userId === msg.receiverId) ||
+        (user._id === msg.receiverId && userData.userId === msg.senderId);
       if (userTest) {
         setLastMessage(msg);
       }
@@ -53,7 +48,7 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
   };
   // LES EVENEMENTS SOCKETS
   socket.on("contact_online", (userAuth) => {
-    if (userAuth.email === user.email && userAuth.email !== userData.email) {
+    if (userAuth.email === user.email) {
       setUserConnected(true);
     }
   });
@@ -76,70 +71,58 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
   });
   // On verifie si l'utilisateur qui nous envois le message
   socket.on("received_message", (dataReceived) => {
-    loadData(setMessages, setLoading, "/messages");
-    const userExist = contactUsers.find(
-      (userF) =>
-        userF.email === dataReceived.userSender.email &&
-        userF.email !== userData.email
-    );
-    if (isVarEmpty(userExist)) {
-      console.log(userExist);
-      console.log("User don't exists in my contact", dataReceived.userSender);
-      addNewContact(dataReceived.userSender);
-    }
+    console.log("new Message ", dataReceived);
+
     addLastMessage(dataReceived.dataSend);
     if (
       dataReceived.dataSend.receiverId === userData.userId &&
-      dataReceived.dataSend.senderId === user._id
+      user._id === dataReceived.dataSend.senderId
     ) {
       setNewMessage({
         state: true,
-        senderId: dataReceived.dataSend.receiverId,
+        senderId: dataReceived.dataSend.senderId,
+        receiverId: dataReceived.dataSend.receiverId,
       });
     }
-    const msg = selectedUser.messages.filter(
-      (d) =>
-        d.receiverId !== dataReceived.userSender.receiverId ||
-        d.message !== dataReceived.dataSend.message ||
-        d.createdAt !== dataReceived.dataSend.createdAt
-    );
-
-    msg.push(dataReceived.dataSend);
-    setSelectedUser((d) => ({
-      ...d,
-      messages: msg,
-    }));
   });
   const handleClick = () => {
-    const userExist = contactUsers.find(
-      (userF) => userF.email === user.email && userF.email !== userData.email
-    );
-
-    setNewMessage((d) => ({ ...d, state: false }));
-    if (showComponentResponsive) {
-      activeToggleBlock();
-    }
-
-    loadData(setMessages, setLoading, "/messages");
-
-    if (showUsers !== null) {
-      showUsers(false);
-    }
-    if (isVarEmpty(userExist)) {
-      console.log("User don't exists in my contact", user);
-      addNewContact(user);
-    }
-    setSelectedUser((d) => ({ ...d, user: user, messages: userChat }));
     socket.emit("join_conversation", {
       userConnectId: userData.userId,
       userInterlocutorId: user._id,
       userInterlocutor: user,
     });
+    addInterlocutorId(user._id);
+    setNewMessage((d) => ({ ...d, state: false }));
+    setSelectedUser((d) => ({
+      ...d,
+      userId: user._id,
+      user: user,
+      messages: [...userMessages],
+    }));
+    if (showComponentResponsive) {
+      activeToggleBlock();
+    }
+
+    if (showUsers !== null) {
+      showUsers(false);
+    }
   };
 
   useEffect(() => {
-    addLastMessage(userChat[userChat.length - 1]);
-  }, []);
+    // Recupère moi tous les messages que l'utilisateur sur lequel m'as déjà envoyer ou que je lui est déja envoyer m'a déjà envoyer
+    const userChat = messages.filter(
+      (ms) =>
+        (ms.senderId === userData.userId && ms.receiverId === _id) ||
+        (ms.senderId === _id && ms.receiverId === userData.userId)
+    );
+    setUserMessages(userChat);
+    if (!arrayIsEmpty(userMessages)) {
+      setMessageLoad(false);
+    } else {
+      setMessageLoad(true);
+    }
+    addLastMessage(userMessages[userMessages.length - 1]);
+  }, [messageLoad, messages, lastMessage]);
   return (
     <>
       <li
@@ -182,31 +165,6 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
               <div className="flex justify-between mb-1">
                 <h2 className="text-sm font-semibold text-black">{fullName}</h2>
                 <div className="flex">
-                  <svg
-                    className="w-4 h-4 text-green-500 fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={19}
-                    height={14}
-                    viewBox="0 0 19 14"
-                  >
-                    <path
-                      fillRule="nonzero"
-                      d="M4.96833846,10.0490996 L11.5108251,2.571972 C11.7472185,2.30180819 12.1578642,2.27443181 12.428028,2.51082515 C12.6711754,2.72357915 12.717665,3.07747757 12.5522007,3.34307913 L12.4891749,3.428028 L5.48917485,11.428028 C5.2663359,11.6827011 4.89144111,11.7199091 4.62486888,11.5309823 L4.54038059,11.4596194 L1.54038059,8.45961941 C1.2865398,8.20577862 1.2865398,7.79422138 1.54038059,7.54038059 C1.7688373,7.31192388 2.12504434,7.28907821 2.37905111,7.47184358 L2.45961941,7.54038059 L4.96833846,10.0490996 L11.5108251,2.571972 L4.96833846,10.0490996 Z M9.96833846,10.0490996 L16.5108251,2.571972 C16.7472185,2.30180819 17.1578642,2.27443181 17.428028,2.51082515 C17.6711754,2.72357915 17.717665,3.07747757 17.5522007,3.34307913 L17.4891749,3.428028 L10.4891749,11.428028 C10.2663359,11.6827011 9.89144111,11.7199091 9.62486888,11.5309823 L9.54038059,11.4596194 L8.54038059,10.4596194 C8.2865398,10.2057786 8.2865398,9.79422138 8.54038059,9.54038059 C8.7688373,9.31192388 9.12504434,9.28907821 9.37905111,9.47184358 L9.45961941,9.54038059 L9.96833846,10.0490996 L16.5108251,2.571972 L9.96833846,10.0490996 Z"
-                    />
-                  </svg>
-                  <svg
-                    className="w-4 h-4 fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={19}
-                    height={14}
-                    viewBox="0 0 19 14"
-                    style={{ color: "transparent" }}
-                  >
-                    <path
-                      fillRule="nonzero"
-                      d="M7.96833846,10.0490996 L14.5108251,2.571972 C14.7472185,2.30180819 15.1578642,2.27443181 15.428028,2.51082515 C15.6711754,2.72357915 15.717665,3.07747757 15.5522007,3.34307913 L15.4891749,3.428028 L8.48917485,11.428028 C8.2663359,11.6827011 7.89144111,11.7199091 7.62486888,11.5309823 L7.54038059,11.4596194 L4.54038059,8.45961941 C4.2865398,8.20577862 4.2865398,7.79422138 4.54038059,7.54038059 C4.7688373,7.31192388 5.12504434,7.28907821 5.37905111,7.47184358 L5.45961941,7.54038059 L7.96833846,10.0490996 L14.5108251,2.571972 L7.96833846,10.0490996 Z"
-                    />
-                  </svg>
                   <span className="ml-1 text-xs font-medium text-gray-600">
                     {!objectIsEmpty(lastMessage)
                       ? formatTime(lastMessage.createdAt)
@@ -225,14 +183,13 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
                     !objectIsEmpty(lastMessage) && lastMessage.message
                   )}{" "}
                 </span>
-                {newMessage.state && newMessage.senderId === user._id && (
-                  <span
-                    v-else=""
-                    className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full"
-                  >
-                    1
-                  </span>
-                )}
+                {newMessage.state &&
+                  newMessage.senderId === user._id &&
+                  newMessage.receiverId === userData.userId && (
+                    <span className="flex items-center justify-center w-5 h-5 text-xs text-right text-white bg-green-500 rounded-full">
+                      1
+                    </span>
+                  )}
               </div>
             </div>
           </div>
@@ -241,6 +198,6 @@ const UserDataInterface = memo(({ user, showUsers = null, child }) => {
       {child}
     </>
   );
-});
+};
 
 export default UserDataInterface;

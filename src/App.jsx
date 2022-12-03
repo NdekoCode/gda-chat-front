@@ -6,7 +6,12 @@ import AuthenticatedRoutes from "./components/auth/AuthenticatedRoutes";
 import RedirectAuthenticated from "./components/auth/RedirectAuthenticated";
 import ToastMessages from "./components/ToastMessages";
 import ChatContext from "./data/AppContext";
-import { arrayIsEmpty, BASE_URL, removeItem } from "./data/utilsFuns";
+import {
+  arrayIsEmpty,
+  BASE_URL,
+  removeItem,
+  setDataStorage,
+} from "./data/utilsFuns";
 import routes from "./routes/routes";
 import { verifyUserHasAuthenticated } from "./services/AuthApi";
 const socket = IO.connect(BASE_URL);
@@ -36,6 +41,7 @@ function App() {
 
     if (userIsAuthenticated) {
       removeItem("users");
+      setDataStorage("contacts", []);
       socket.on("connect", () => {
         setIsSocketConnect(true);
         if (userIsAuthenticated) {

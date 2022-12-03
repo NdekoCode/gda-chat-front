@@ -5,7 +5,8 @@ import { API_URL } from "../../data/utilsFuns";
 import { fetchUserConnect } from "../../services/AuthApi";
 
 const FormMessage = () => {
-  const { selectedUser, setSelectedUser, userData, socket } = ChatContext();
+  const { selectedUser, setSelectedUser, userData, socket, addInterlocutorId } =
+    ChatContext();
   const [msg, setMsg] = useState();
   const handleMessage = (evt) => {
     socket.emit("user_writing", {
@@ -16,6 +17,7 @@ const FormMessage = () => {
     setMsg(value);
   };
   const handleSubmit = (evt) => {
+    addInterlocutorId(selectedUser.user._id);
     evt.preventDefault();
     setMsg("");
     const dataSend = {
@@ -26,7 +28,7 @@ const FormMessage = () => {
     };
     setSelectedUser((d) => ({
       ...d,
-      messages: [...selectedUser.messages, dataSend],
+      messages: [...d.messages, dataSend],
     }));
     const userSender = { ...userData };
     userSender._id = userSender.userId;
