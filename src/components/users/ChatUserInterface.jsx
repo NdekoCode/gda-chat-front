@@ -9,10 +9,11 @@ import UserSkeleton from "./UserSkeleton";
 
 const ChatUserInterface = memo(({ contactUsers, isLoading }) => {
   const { usersIsShown, activeBlock, showLoadUser } = ChatContext();
+
   return (
     <>
       <div
-        className="relativefadeLeave flex flex-col h-full bg-white border-r border-gray-300 shadow-xl md:block transform w-full transition-all sm:w-[24rem] duration-500 ease-in-out"
+        className="relative fadeLeave flex flex-col h-full bg-white border-r border-gray-300 shadow-xl md:block transform w-full transition-all sm:w-[24rem] duration-500 ease-in-out"
         style={{ display: activeBlock && "none" }}
       >
         <div className="flex justify-between px-3 pt-1 text-white">
