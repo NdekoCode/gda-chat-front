@@ -31,6 +31,7 @@ export const ContextProvider = memo(({ children }) => {
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [usersIsShown, setUsersIsShown] = useState(false);
+  const [showUpdateFormular, setShowUpdateFormular] = useState(false);
   const [searchUser, setSearchUser] = useState("");
   const [idUser, setId] = useState("");
   const [messages, setMessages] = useState([]);
@@ -41,6 +42,11 @@ export const ContextProvider = memo(({ children }) => {
   const [showComponentResponsive, setShowComponentResponsive] = useState(
     width < 640
   );
+  const handleUpdateForm = useCallback(() => {
+    console.log("Modify form");
+    setShowUpdateFormular((d) => !d);
+  });
+
   const updateDimensions = useCallback(() => {
     const width = window.innerWidth;
     setWindowWidth(width);
@@ -127,6 +133,9 @@ export const ContextProvider = memo(({ children }) => {
     idUser,
     logOutUser,
     addInterlocutorId,
+    showUpdateFormular,
+    setShowUpdateFormular,
+    handleUpdateForm,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

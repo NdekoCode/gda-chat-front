@@ -1,22 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import ChatContext from "../data/AppContext";
+import { useProfile } from "../data/hooksFunc";
 import Settings from "./users/Settings";
 
 const StickyNavbar = () => {
   const { handleVisible, userData, logOutUser, showComponentResponsive } =
     ChatContext();
-  const [state, setState] = useState({
-    visible: false,
-  });
-  const [profile, setProfile] = useState(false);
-  const handleProfile = () => {
-    setProfile((p) => !p);
-    setState((d) => ({ ...d, visible: false }));
-  };
-
-  const handleStickyVisible = () => {
-    setState((d) => ({ ...d, visible: !state.visible }));
-  };
+  const [state, profile, handleProfile, handleStickyVisible] = useProfile();
   return (
     <>
       <div className="relative">
