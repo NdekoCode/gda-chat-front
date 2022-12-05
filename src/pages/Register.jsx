@@ -43,7 +43,6 @@ const Register = () => {
               ...setting,
               token: dataStore.token,
             }));
-            console.log(alert.message);
             toast.success(alert.message);
             return setUserIsAuthenticated(result);
           }

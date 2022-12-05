@@ -71,8 +71,6 @@ const UserDataInterface = ({ user, showUsers = null, child }) => {
   });
   // On verifie si l'utilisateur qui nous envois le message
   socket.on("received_message", (dataReceived) => {
-    console.log("new Message ", dataReceived);
-
     addLastMessage(dataReceived.dataSend);
     if (
       dataReceived.dataSend.receiverId === userData.userId &&

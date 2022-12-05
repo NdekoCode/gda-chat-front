@@ -71,8 +71,6 @@ export async function fetchData(url) {
       data = responseData;
       loading = false;
     }
-
-    console.log(responseData);
   } catch (error) {
     console.log("Error lors de la récuperation des donnée " + error.message);
     loading = false;

@@ -15,11 +15,9 @@ export function verifyUserHasAuthenticated() {
   const token = getDataStorage("user_token");
   const isValid = token ? tokenIsValid(token) : false;
   if (!isValid) {
-    console.log("Token invalide");
     removeItem("user_token");
     return false;
   }
-  console.log("Token valide");
   return isValid;
 }
 export function verifyUserData() {

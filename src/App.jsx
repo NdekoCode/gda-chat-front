@@ -36,7 +36,6 @@ function App() {
       ToastMessages(alert);
       setAlert([]);
     }
-    console.log("Not connected", userIsAuthenticated);
     setSocket(socket);
 
     if (userIsAuthenticated) {
