@@ -1,4 +1,11 @@
-import { createContext, memo, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "react-toastify";
 import { logOut } from "../services/AuthApi";
 import { useWindowSize } from "./hooksFunc";
@@ -34,11 +41,11 @@ export const ContextProvider = memo(({ children }) => {
   const [showComponentResponsive, setShowComponentResponsive] = useState(
     width < 640
   );
-  const updateDimensions = () => {
+  const updateDimensions = useCallback(() => {
     const width = window.innerWidth;
     setWindowWidth(width);
     setShowComponentResponsive(width < 640);
-  };
+  }, []);
 
   /**
    * @description Permet de sauvegarder l'identifiant de la personne avec qui je discute ou avec qui je clique pour discuter
@@ -46,10 +53,10 @@ export const ContextProvider = memo(({ children }) => {
    * @export
    * @param {String} id l'identifiant
    */
-  function addInterlocutorId(id) {
+  const addInterlocutorId = useCallback((id) => {
     setId(id);
     setDataStorage("interlocId", id);
-  }
+  }, []);
   useEffect(() => {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
@@ -62,11 +69,11 @@ export const ContextProvider = memo(({ children }) => {
     classVisible: "",
   });
   const [activeBlock, setActiveBlock] = useState(false);
-  const activeToggleBlock = () => {
+  const activeToggleBlock = useCallback(() => {
     if (showComponentResponsive) {
       setActiveBlock((state) => !state);
     }
-  };
+  }, []);
 
   const handleVisible = () => {
     setStateVisible((d) => ({ ...d, visible: !stateSticky.visible }));
