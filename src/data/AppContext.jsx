@@ -9,7 +9,12 @@ import {
 import { toast } from "react-toastify";
 import { logOut } from "../services/AuthApi";
 import { useWindowSize } from "./hooksFunc";
-import { API_URL, getDataStorage, setDataStorage } from "./utilsFuns";
+import {
+  API_URL,
+  getDataStorage,
+  removeItem,
+  setDataStorage,
+} from "./utilsFuns";
 
 /** @type {React.Context} */
 const AppContext = createContext();
@@ -61,6 +66,7 @@ export const ContextProvider = memo(({ children }) => {
    */
   const addInterlocutorId = useCallback((id) => {
     setId(id);
+    removeItem("interlocId");
     setDataStorage("interlocId", id);
   }, []);
   useEffect(() => {

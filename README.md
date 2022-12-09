@@ -33,9 +33,9 @@ Le projet doit être réalisé avec :
 
 Le client possède déjà une maquette que vous devez intégrer.
 
-## Modalités pédagogiques
+## Demarrage
 
-Le projet individuel et doit être réalisé en 10 jours
+npm run dev
 
 ## Livrables
 
