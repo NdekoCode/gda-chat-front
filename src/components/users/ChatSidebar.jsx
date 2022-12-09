@@ -5,7 +5,7 @@ import UpdateProfile from "./UpdateProfile";
 
 const ChatSidebar = memo(({ stateSticky, userData, handleVisible }) => {
   const { showUpdateFormular, handleUpdateForm } = ChatContext();
-  const [state, profile, handleProfile] = useProfile();
+  const handleProfile = useProfile()[3];
   const handleProfileVisible = () => {
     handleUpdateForm();
     handleProfile();

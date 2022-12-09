@@ -62,7 +62,17 @@ const Chat = () => {
       loadData(setMessages, setLoading, "/messages")
         .then((messages) => {
           const userChat = [
-            ...new Set(messages.map((ms) => JSON.stringify(ms))),
+            ...new Set(
+              messages
+                .filter(
+                  (ms) =>
+                    (ms.senderId === userData.userId &&
+                      ms.receiverId === userSender._id) ||
+                    (ms.senderId === userSender._id &&
+                      ms.receiverId === userData.userId)
+                )
+                .map((ms) => JSON.stringify(ms))
+            ),
           ].map((ms) => JSON.parse(ms));
           setSelectedUser((d) => ({
             ...d,
